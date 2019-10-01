@@ -6,4 +6,4 @@ See the project proposal [here](PROPOSAL.md)
 
 ## License
 
-Project is unlicensed. All rights reserved by Jonathan Lam and Lance Wang.
+Project is unlicensed. All rights reserved by Jonathan Lam ([@jonlamca](github.com/jonlamca)) and Lance Wang.
