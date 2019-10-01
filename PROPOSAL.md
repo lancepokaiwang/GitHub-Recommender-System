@@ -14,6 +14,7 @@ Practitioner information resources are available to enable participation from bo
 ## Problem Statement
 
 Newcomers to open source software development are faced with a myriad of choices and factors in selecting a first project and first task on the GitHub platform: finding the right technology, high activity and availability of suitable tasks.
+
 In this research, the authors propose a tool to help new contributors reduce the amount of considerations when exploring and seeking out a new project. The recommendation tool will take a user profile based on ability and professional background and suggest a set of potential projects. The tool will identify potential tasks within these projects that are newcomer friendly.
 
 ## Objective
