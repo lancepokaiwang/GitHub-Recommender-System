@@ -1,4 +1,4 @@
-# Recommendation System for GitHub Newcomer
+# Issue and Project Recommendation System for a GitHub Newcomer
 
 The project is a content-based filtering approach for suggesting tasks and projects to GitHub newcomers.
 
