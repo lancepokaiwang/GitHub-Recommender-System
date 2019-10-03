@@ -6,4 +6,4 @@ See the project proposal [here](PROPOSAL.md)
 
 ## License
 
-No license. All rights reserved by Jonathan Lam ([@jonlamca](https://github.com/jonlamca)) and Lance Wang.
+No license. All rights reserved by Jonathan Lam ([@jonlamca](https://github.com/jonlamca)) and Lance Wang ([@ycpss91303](https://github.com/ycpss91303)).
