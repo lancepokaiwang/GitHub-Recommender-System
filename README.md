@@ -4,6 +4,15 @@ The project is a content-based filtering approach for suggesting tasks and proje
 
 See the project proposal [here](PROPOSAL.md)
 
+***
+
+## 2019.10.25 Update
+>* Create Python 3.7 environment for data analysis and process.
+>* Filter the features which may be useful.
+>* Dataset: [MSR 2014](http://ghtorrent.org/msr14.html)
+
+***
+
 ## License
 
 No license. All rights reserved by Jonathan Lam ([@jonlamca](https://github.com/jonlamca)) and Lance Wang ([@ycpss91303](https://github.com/ycpss91303)).
