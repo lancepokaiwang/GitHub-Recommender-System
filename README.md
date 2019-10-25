@@ -10,6 +10,7 @@ See the project proposal [here](PROPOSAL.md)
 >* Create Python 3.7 environment for data analysis and process.
 >* Filter the features which may be useful.
 >* Dataset: [MSR 2014](http://ghtorrent.org/msr14.html)
+>* The IDE I use: [PyCharm](https://www.jetbrains.com/pycharm/)
 
 ***
 
