@@ -5,6 +5,10 @@ The project is a content-based filtering approach for suggesting tasks and proje
 See the project proposal [here](PROPOSAL.md)
 
 ***
+## 2019.10.31 Update
+>* Rewrite data extraction (in order to get more data)
+>> Next:
+>>* Getting user data and train user model to determine what charateristics that newcomers should have.
 
 ## 2019.10.25 Update
 >* Create Python 3.7 environment for data analysis and process.
