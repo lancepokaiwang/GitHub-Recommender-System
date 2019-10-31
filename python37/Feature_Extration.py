@@ -49,7 +49,7 @@ def getIssueData():
             # Get issue data from GitHub API
             issue_url = "https://api.github.com/repos/symfony/symfony/issues/{}?client_id={}&client_secret={}".format(
                 issue["number"], CLIENT_ID, CLIENT_SECRET)
-            print(issue_url)
+            # print(issue_url)
             issue_online = requests.get(issue_url, verify=False).json()
 
             issue_id = issue_online["number"]
@@ -69,7 +69,7 @@ def getIssueData():
             if issue_online.get("pull_request", False):
                 pr_url = "https://api.github.com/repos/symfony/symfony/pulls/{}?client_id={}&client_secret={}".format(
                     issue_online["number"], CLIENT_ID, CLIENT_SECRET)
-                print(pr_url)
+                # print(pr_url)
                 pr_online = requests.get(pr_url, verify=False).json()
 
                 pr_comments = pr_online["comments"]
@@ -81,7 +81,7 @@ def getIssueData():
                 # Get commits data from GitHub API
                 if pr_online["commits_url"] is not None:
                     commits_url = pr_online["commits_url"] + "?client_id={}&client_secret={}".format(CLIENT_ID, CLIENT_SECRET)
-                    print(commits_url)
+                    # print(commits_url)
                     commits_online = requests.get(commits_url, verify=False).json()
 
                     # Committers
@@ -91,6 +91,7 @@ def getIssueData():
             # Archive data
             issue_object["issue_id"] = issue_id
             issue_object["assignees"] = assignees
+            issue_object["lables"] = labels
             issue_object["title"] = title
             issue_object["body"] = body
             issue_object["issue_comments"] = issue_comments
@@ -99,7 +100,7 @@ def getIssueData():
             issue_object["committers"] = committers
             issue_object["changed_files"] = changed_files
             issue_object["issue_created_by"] = issue_created_by
-            issue_object["pr_merged_by"] = pr_merged_by
+            # issue_object["pr_merged_by"] = pr_merged_by
             # issue_object["issue_closed_by"] = issue_closed_by
             issue_object["issue_closed_at"] = issue_closed_at
             # Append issue data to issue dataset
