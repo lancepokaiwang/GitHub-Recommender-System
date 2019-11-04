@@ -1,0 +1,72 @@
+{
+    "lsmith77": {
+        "age": 1196,
+        "repo_num": 49,
+        "follower_num": 375,
+        "commit_comment_num": 0,
+        "commit_num": 192,
+        "issue_comment_num": 924,
+        "issue_event_num": 841,
+        "issue_number": 107,
+        "org_number": 8,
+        "pr_comment_num": 263,
+        "pr_num": 75,
+        "collaborator_num": 0
+    },
+    "fabpot": {
+        "age": 1703,
+        "repo_num": 67,
+        "follower_num": 3069,
+        "commit_comment_num": 0,
+        "commit_num": 7918,
+        "issue_comment_num": 4878,
+        "issue_event_num": 21715,
+        "issue_number": 229,
+        "org_number": 3,
+        "pr_comment_num": 1528,
+        "pr_num": 224,
+        "collaborator_num": 1
+    },
+    "ghost": {
+        "age": 1949,
+        "repo_num": 0,
+        "follower_num": 20,
+        "commit_comment_num": 0,
+        "commit_num": 0,
+        "issue_comment_num": 1285,
+        "issue_event_num": 14,
+        "issue_number": 665,
+        "org_number": 0,
+        "pr_comment_num": 0,
+        "pr_num": 1,
+        "collaborator_num": 0
+    },
+    "lancergr": {
+        "age": 542,
+        "repo_num": 3,
+        "follower_num": 0,
+        "commit_comment_num": 0,
+        "commit_num": 9,
+        "issue_comment_num": 3,
+        "issue_event_num": 3,
+        "issue_number": 4,
+        "org_number": 0,
+        "pr_comment_num": 0,
+        "pr_num": 4,
+        "collaborator_num": 0
+    },
+    "stof": {
+        "age": 1065,
+        "repo_num": 95,
+        "follower_num": 545,
+        "commit_comment_num": 0,
+        "commit_num": 289,
+        "issue_comment_num": 4918,
+        "issue_event_num": 4641,
+        "issue_number": 201,
+        "org_number": 6,
+        "pr_comment_num": 4395,
+        "pr_num": 130,
+        "collaborator_num": 2
+    }
+}
