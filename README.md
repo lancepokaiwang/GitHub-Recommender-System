@@ -5,6 +5,11 @@ The project is a content-based filtering approach for suggesting tasks and proje
 See the project proposal [here](PROPOSAL.md)
 
 ***
+## 2019.11.04 Update
+>* Rewrite data extraction and user extration in order to get more data and incrase predict precision.
+>* Added "User Classification" file to predict newcomer.
+>* Saved "User Decision Tree Model" and "User Random Forest Model" files for future usage.
+
 ## 2019.10.31 Update
 >* Rewrite data extraction (in order to get more data)
 >> Next:
