@@ -23,4 +23,9 @@
 * tolerance: 0.0001 (default)
 * algorithm: auto - em, elkan (default) 
 
-3. 
+3. Decision tree
+* criterion: entropy
+* split: best (default)
+* max_depth: 13
+* max_features: None - use all (default)
+* random state: 0
