@@ -11,6 +11,12 @@ See the project proposal [here](PROPOSAL.md)
 >* Saved "User Decision Tree Model" and "User Random Forest Model" files for future usage.
 >* Symfony data set, MSR 14 [https://github.com/symfony/symfony](https://github.com/symfony/symfony)
 
+| Data                                | Description                                                     |
+| ----------------------------------- | --------------------------------------------------------------- |
+| `data.json`                         | list of repository issues that are bug fixes and/or "easy pick" |
+| `data_users.json`                   | list of users from issues that are bug fixes and/or "easy pick" |
+| `data_users_ready_to_analysis.json` | clean/preprocessed data_users.json                              |
+
 ## 2019.10.31 Update
 >* Rewrite data extraction (in order to get more data)
 >> Next:
