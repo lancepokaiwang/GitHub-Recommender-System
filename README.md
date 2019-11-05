@@ -9,6 +9,7 @@ See the project proposal [here](PROPOSAL.md)
 >* Rewrite data extraction and user extration in order to get more data and incrase predict precision.
 >* Added "User Classification" file to predict newcomer.
 >* Saved "User Decision Tree Model" and "User Random Forest Model" files for future usage.
+>* Symfony data set, MSR 14 [https://github.com/symfony/symfony](https://github.com/symfony/symfony)
 
 ## 2019.10.31 Update
 >* Rewrite data extraction (in order to get more data)
