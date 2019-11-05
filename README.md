@@ -6,7 +6,7 @@ See the project proposal [here](PROPOSAL.md)
 
 ***
 ## 2019.11.05 Update
->* Param/Model outpts from Nov 4 [RESULTS.md](RESULTS.md)
+* Param/Model outpts from Nov 4 [RESULTS.md](RESULTS.md)
 
 ## 2019.11.04 Update
 >* Rewrite data extraction and user extration in order to get more data and increase predict precision.
