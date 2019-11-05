@@ -34,8 +34,12 @@
 * max_features: None - use all (default)
 * random state: 0
 
+https://github.com/jonlamca/comp5117-lam-wang/blob/d8607c4/python37/data/user_tree.png
+
 ### Model 2: Random Forest 
 * criterion: entropy
 * n_estimators: 10 (default) 
 * max_depth: None (full depth)
 * random_state=3
+
+https://github.com/jonlamca/comp5117-lam-wang/blob/d8607c4/python37/data/user_forest.png
