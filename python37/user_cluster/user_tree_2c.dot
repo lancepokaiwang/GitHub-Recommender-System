@@ -1,0 +1,25 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="issue_comment_num <= 4.64\nentropy = 0.81\nsamples = 330\nvalue = [247, 83]", fillcolor="#eeab7c"] ;
+1 [label="commit_num <= 2.9\nentropy = 0.21\nsamples = 245\nvalue = [237, 8]", fillcolor="#e68540"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="entropy = 0.0\nsamples = 222\nvalue = [222, 0]", fillcolor="#e58139"] ;
+1 -> 2 ;
+3 [label="issue_number <= 2.45\nentropy = 0.93\nsamples = 23\nvalue = [15, 8]", fillcolor="#f3c4a3"] ;
+1 -> 3 ;
+4 [label="entropy = 0.0\nsamples = 8\nvalue = [8, 0]", fillcolor="#e58139"] ;
+3 -> 4 ;
+5 [label="entropy = 1.0\nsamples = 15\nvalue = [7, 8]", fillcolor="#e6f3fc"] ;
+3 -> 5 ;
+6 [label="commit_num <= 3.64\nentropy = 0.52\nsamples = 85\nvalue = [10, 75]", fillcolor="#53aae8"] ;
+0 -> 6 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+7 [label="pr_comment_num <= 2.29\nentropy = 0.99\nsamples = 22\nvalue = [10, 12]", fillcolor="#deeffb"] ;
+6 -> 7 ;
+8 [label="entropy = 0.65\nsamples = 12\nvalue = [10, 2]", fillcolor="#ea9a61"] ;
+7 -> 8 ;
+9 [label="entropy = 0.0\nsamples = 10\nvalue = [0, 10]", fillcolor="#399de5"] ;
+7 -> 9 ;
+10 [label="entropy = 0.0\nsamples = 63\nvalue = [0, 63]", fillcolor="#399de5"] ;
+6 -> 10 ;
+}
