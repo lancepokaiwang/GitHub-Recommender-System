@@ -5,6 +5,25 @@ The project is a content-based filtering approach for suggesting tasks and proje
 See the project proposal [here](PROPOSAL.md)
 
 ***
+## 2019.11.12 Update
+>* For 1.1., modify the process logic in order to reduce the time needed.
+>* For 2.1., add column "newcomer" in order to verify the newcomer.
+>* For 3.1., modify KMeans in order to get more accuracy clustering result.
+>* For 3.2., add "Silhouette Analysis" to determine the number of clusters.
+>* For 4.1., move Decision Tree to this file.
+>* For 4.2., move Random Forest to this file.
+>> Next:
+>>* Finalising how many cluster we need to use.
+>>* Starting issue classify.
+
+| Data                                | Description                                                     |
+| ----------------------------------- | --------------------------------------------------------------- |
+| `data.json`                         | list of repository issues that are bug fixes and/or "easy pick" |
+| `data_users.json`                   | list of users from issues that are bug fixes and/or "easy pick" |
+| `data_users_2.json`                 | Second version of  `data_users.json`                            |
+| `data_users_ready_to_analysis.csv`  | clean/preprocessed data_users.json                              |
+| `data_users_ready_to_analysis_2.csv`| Second version of  `data_users_ready_to_analysis.csv`           |
+
 ## 2019.11.05 Update
 * Param/Model outpts from Nov 4 [RESULTS.md](RESULTS.md)
 
@@ -13,13 +32,6 @@ See the project proposal [here](PROPOSAL.md)
 >* Added "User Classification" file to predict newcomer.
 >* Saved "User Decision Tree Model" and "User Random Forest Model" files for future usage.
 >* Symfony data set, MSR 14 [https://github.com/symfony/symfony](https://github.com/symfony/symfony)
-
-| Data                                | Description                                                     |
-| ----------------------------------- | --------------------------------------------------------------- |
-| `data.json`                         | list of repository issues that are bug fixes and/or "easy pick" |
-| `data_users.json`                   | list of users from issues that are bug fixes and/or "easy pick" |
-| `data_users_ready_to_analysis.csv` | clean/preprocessed data_users.json                               |
-
 
 ## 2019.10.31 Update
 >* Rewrite data extraction (in order to get more data)

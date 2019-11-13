@@ -7,7 +7,7 @@ def printDictionary(dict):
         print(format(key) + ": " + format(dict[key]))
 
 
-with open('data/data_users.json') as json_file:
+with open('data/data_users_2.json') as json_file:
     dataset = json.load(json_file)
 
     # Open CSV reader
@@ -16,10 +16,10 @@ with open('data/data_users.json') as json_file:
         writer = csv.writer(csvfile)
         # Write first row
         writer.writerow(
-            ['age', 'repo_num', 'follower_num', 'commit_num', 'issue_comment_num', 'issue_event_num', 'issue_number', 'org_number', 'pr_comment_num', 'pr_num'])
-        for user, profile in dataset.items():
+            ['newcomer', 'age', 'repo_num', 'follower_num', 'commit_comment_num', 'commit_num', 'issue_comment_num', 'issue_event_num', 'issue_number', 'org_number', 'pr_comment_num', 'pr_num', 'collaborator_num'])
+        for profile in dataset:
             if int(profile['age']) >= 0:
                 writer.writerow(
-                    [profile['age'], profile['repo_num'], profile['follower_num'],
+                    [profile['newcomer'], profile['age'], profile['repo_num'], profile['follower_num'], profile['commit_comment_num'],
                      profile['commit_num'], profile['issue_comment_num'], profile['issue_event_num'],
-                     profile['issue_number'], profile['org_number'], profile['pr_comment_num'], profile['pr_num']])
+                     profile['issue_number'], profile['org_number'], profile['pr_comment_num'], profile['pr_num'], profile['collaborator_num']])
