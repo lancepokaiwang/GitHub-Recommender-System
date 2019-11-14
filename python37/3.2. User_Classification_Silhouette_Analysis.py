@@ -41,53 +41,56 @@ with open('data/data_users_ready_to_analysis_2.csv', newline='') as csvfile:
 
                 # Age
                 # row[1] = round(int(row[1]) / 365, 2)
-                row[1] = 0
+                row[1] = int(row[1]) / 365
+                if int(row[1]) != 0:
+                    row[1] = math.log(int(row[1]), 2)
 
                 # repo_num
-                # if int(row[2]) != 0:
-                #     row[2] = math.log(int(row[2]), 10)
+                if int(row[2]) != 0:
+                    row[2] = math.log(int(row[2]), 2)
 
                 # follower_num
-                if int(row[3]) != 0:
-                    row[3] = math.log(int(row[3]), 2)
+                # if int(row[3]) != 0:
+                #     row[3] = math.log(int(row[3]), 2)
+                row[3] = 0
 
                 # commit_comment_num
                 if int(row[4]) != 0:
-                    row[4] = math.log(int(row[4]), 10)
+                    row[4] = math.log(int(row[4]), 2)
 
                 # commit_num
                 if int(row[5]) != 0:
-                    row[5] = math.log(int(row[5]), 10)
+                    row[5] = math.log(int(row[5]), 2)
 
                 # issue_comment_num
                 if int(row[6]) != 0:
-                    row[6] = math.log(int(row[6]), 10)
+                    row[6] = math.log(int(row[6]), 2)
 
                 # issue_event_num
                 if int(row[7]) != 0:
-                    row[7] = math.log(int(row[7]), 10)
+                    row[7] = math.log(int(row[7]), 2)
 
                 # issue_number
                 if int(row[8]) != 0:
-                    row[8] = math.log(int(row[8]), 10)
+                    row[8] = math.log(int(row[8]), 2)
 
                 # org_number
-                # if int(row[9]) != 0:
-                #     row[9] = math.log(int(row[9]), 10)
+                if int(row[9]) != 0:
+                    row[9] = math.log(int(row[9]), 2)
 
                 # pr_comment_num
                 if int(row[10]) != 0:
-                    row[10] = math.log(int(row[10]), 10)
+                    row[10] = math.log(int(row[10]), 2)
 
                 # pr_num
                 if int(row[11]) != 0:
                     row[11] = math.log(int(row[11]), 2)
 
                 # collaborator_num
-                # if int(row[12]) != 0:
-                #     row[12] = math.log(int(row[12]), 10)
+                if int(row[12]) != 0:
+                    row[12] = math.log(int(row[12]), 2)
 
-                data.append(row[1:12])
+                data.append([row[6], row[7], row[8]])
         index += 1
 
 data_kmeans = np.array(data).astype(np.float64)
@@ -119,7 +122,7 @@ for n_clusters in range_n_clusters:
 
     # Initialize the clusterer with n_clusters value and a random generator
     # seed of 10 for reproducibility.
-    clusterer = KMeans(n_clusters=n_clusters, init='random', n_init=10, max_iter=50, tol=0.0001,
+    clusterer = KMeans(n_clusters=n_clusters, init='random', n_init=10, max_iter=10000, tol=0.0001,
                        precompute_distances='auto',
                        verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='elkan')
     cluster_labels = clusterer.fit_predict(X)
@@ -189,5 +192,6 @@ for n_clusters in range_n_clusters:
     plt.suptitle(("Silhouette analysis for KMeans clustering on sample data "
                   "with n_clusters = %d" % n_clusters),
                  fontsize=14, fontweight='bold')
+    plt.show()
 
-plt.show()
+
