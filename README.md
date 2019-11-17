@@ -17,8 +17,8 @@ See the project proposal [here](PROPOSAL.md)
 | --------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `all_issues_REPO-NAME.json`                   | list of repository issues (also includs it's pr, commits) that are bug fixes and/or "easy pick"     |
 | `users_REPO-NAME.json`                        | list of users from issues that are bug fixes and/or "easy pick" (THIS FILE MAY BE TOO HUGE TO OPEN) |
-| `users_REPO-NAME_filtered.csv`                | filtered user json file. include different ages with same user.                                     |
-| `data_users_REPO-NAME_ready_to_analysis.csv`  | csv format file of `users_REPO-NAME_filtered.csv`                                                   |
+| `users_REPO-NAME_filtered.json`                | filtered user json file. include different ages with same user.                                     |
+| `data_users_REPO-NAME_ready_to_analysis.csv`  | csv format file of `users_REPO-NAME_filtered.json`                                                   |
 | `data_users_cluster_with_results.csv`         | K-Means result table                                                                                |
 
 
