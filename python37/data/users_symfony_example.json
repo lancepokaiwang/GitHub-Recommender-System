@@ -295,6 +295,24 @@
         "commits": [
             {
                 "sha": "45ada3285f6e8f8507086ed083582b37da421b23",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-19T10:45:34Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-19T10:45:34Z"
+                    },
+                    "tree": {
+                        "sha": "3b454eeefcac29772dd69b94de7c53ab9915e7b5",
+                        "url": "https://api.github.com/repos/symfony/symfony/git/trees/3b454eeefcac29772dd69b94de7c53ab9915e7b5"
+                    },
+                    "url": "https://api.github.com/repos/symfony/symfony/git/commits/45ada3285f6e8f8507086ed083582b37da421b23",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/symfony/symfony/commits/45ada3285f6e8f8507086ed083582b37da421b23",
                 "html_url": "https://github.com/symfony/symfony/commit/45ada3285f6e8f8507086ed083582b37da421b23",
                 "comments_url": "https://api.github.com/repos/symfony/symfony/commits/45ada3285f6e8f8507086ed083582b37da421b23/comments",
@@ -319,6 +337,24 @@
             },
             {
                 "sha": "48fa3ffe297638e5361205ea191cc36ce4244a11",
+                "commit": {
+                    "author": {
+                        "name": "john doe",
+                        "email": "julien.galenski@gmail.com",
+                        "date": "2013-04-05T21:34:42Z"
+                    },
+                    "committer": {
+                        "name": "julien Galenski",
+                        "email": "julien.galenski@gmail.com",
+                        "date": "2013-04-08T07:36:48Z"
+                    },
+                    "tree": {
+                        "sha": "f148a11aca75d8dd7c17ff5fbbf103fa2f203db1",
+                        "url": "https://api.github.com/repos/ruian/symfony/git/trees/f148a11aca75d8dd7c17ff5fbbf103fa2f203db1"
+                    },
+                    "url": "https://api.github.com/repos/ruian/symfony/git/commits/48fa3ffe297638e5361205ea191cc36ce4244a11",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/ruian/symfony/commits/48fa3ffe297638e5361205ea191cc36ce4244a11",
                 "html_url": "https://github.com/ruian/symfony/commit/48fa3ffe297638e5361205ea191cc36ce4244a11",
                 "comments_url": "https://api.github.com/repos/ruian/symfony/commits/48fa3ffe297638e5361205ea191cc36ce4244a11/comments",
@@ -343,6 +379,24 @@
             },
             {
                 "sha": "3974152b293e75cf5b2f8041872690b5228aca42",
+                "commit": {
+                    "author": {
+                        "name": "julien Galenski",
+                        "email": "julien.galenski@gmail.com",
+                        "date": "2013-01-04T10:06:32Z"
+                    },
+                    "committer": {
+                        "name": "julien Galenski",
+                        "email": "julien.galenski@gmail.com",
+                        "date": "2013-01-04T10:09:22Z"
+                    },
+                    "tree": {
+                        "sha": "bcaa98fc8e83572a493d2fc17573fe6042a5f0b0",
+                        "url": "https://api.github.com/repos/ruian/symfony/git/trees/bcaa98fc8e83572a493d2fc17573fe6042a5f0b0"
+                    },
+                    "url": "https://api.github.com/repos/ruian/symfony/git/commits/3974152b293e75cf5b2f8041872690b5228aca42",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/ruian/symfony/commits/3974152b293e75cf5b2f8041872690b5228aca42",
                 "html_url": "https://github.com/ruian/symfony/commit/3974152b293e75cf5b2f8041872690b5228aca42",
                 "comments_url": "https://api.github.com/repos/ruian/symfony/commits/3974152b293e75cf5b2f8041872690b5228aca42/comments",
@@ -367,6 +421,24 @@
             },
             {
                 "sha": "83b37ffb4dbfae43f80cb4ea0c0186f262046c02",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-11-16T13:04:00Z"
+                    },
+                    "committer": {
+                        "name": "julien Galenski",
+                        "email": "julien.galenski@gmail.com",
+                        "date": "2012-11-16T13:35:03Z"
+                    },
+                    "tree": {
+                        "sha": "786ad77d81a1ebe319adec448228ca54d2553643",
+                        "url": "https://api.github.com/repos/fran6co/symfony/git/trees/786ad77d81a1ebe319adec448228ca54d2553643"
+                    },
+                    "url": "https://api.github.com/repos/fran6co/symfony/git/commits/83b37ffb4dbfae43f80cb4ea0c0186f262046c02",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/fran6co/symfony/commits/83b37ffb4dbfae43f80cb4ea0c0186f262046c02",
                 "html_url": "https://github.com/fran6co/symfony/commit/83b37ffb4dbfae43f80cb4ea0c0186f262046c02",
                 "comments_url": "https://api.github.com/repos/fran6co/symfony/commits/83b37ffb4dbfae43f80cb4ea0c0186f262046c02/comments",
@@ -391,6 +463,24 @@
             },
             {
                 "sha": "524081f4cf488ebeadd10ce20397d137ddeb7817",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-08-15T10:32:42Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-08-15T10:32:42Z"
+                    },
+                    "tree": {
+                        "sha": "e7ef869f63be417a5b4c5fd6c09045c8b33ab87a",
+                        "url": "https://api.github.com/repos/ruian/symfony/git/trees/e7ef869f63be417a5b4c5fd6c09045c8b33ab87a"
+                    },
+                    "url": "https://api.github.com/repos/ruian/symfony/git/commits/524081f4cf488ebeadd10ce20397d137ddeb7817",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/ruian/symfony/commits/524081f4cf488ebeadd10ce20397d137ddeb7817",
                 "html_url": "https://github.com/ruian/symfony/commit/524081f4cf488ebeadd10ce20397d137ddeb7817",
                 "comments_url": "https://api.github.com/repos/ruian/symfony/commits/524081f4cf488ebeadd10ce20397d137ddeb7817/comments",
@@ -415,6 +505,24 @@
             },
             {
                 "sha": "26f5ac4aa060d2ffc3e40799158f260a5b9e9198",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-05-30T16:44:03Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-05-30T16:44:03Z"
+                    },
+                    "tree": {
+                        "sha": "0872ccfff6fc31be493817eef0d25eff3ac608ee",
+                        "url": "https://api.github.com/repos/Tobion/symfony/git/trees/0872ccfff6fc31be493817eef0d25eff3ac608ee"
+                    },
+                    "url": "https://api.github.com/repos/Tobion/symfony/git/commits/26f5ac4aa060d2ffc3e40799158f260a5b9e9198",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/Tobion/symfony/commits/26f5ac4aa060d2ffc3e40799158f260a5b9e9198",
                 "html_url": "https://github.com/Tobion/symfony/commit/26f5ac4aa060d2ffc3e40799158f260a5b9e9198",
                 "comments_url": "https://api.github.com/repos/Tobion/symfony/commits/26f5ac4aa060d2ffc3e40799158f260a5b9e9198/comments",
@@ -439,6 +547,24 @@
             },
             {
                 "sha": "f7200e479c12767282cbdf1613532903ebbb936e",
+                "commit": {
+                    "author": {
+                        "name": "julien.galenski",
+                        "email": "julien.galenski@sensio.com",
+                        "date": "2012-04-13T15:07:09Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-23T10:28:18Z"
+                    },
+                    "tree": {
+                        "sha": "6df08aea97e5778cf1ae6109279c22649f6b8d09",
+                        "url": "https://api.github.com/repos/symfony/symfony/git/trees/6df08aea97e5778cf1ae6109279c22649f6b8d09"
+                    },
+                    "url": "https://api.github.com/repos/symfony/symfony/git/commits/f7200e479c12767282cbdf1613532903ebbb936e",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/symfony/symfony/commits/f7200e479c12767282cbdf1613532903ebbb936e",
                 "html_url": "https://github.com/symfony/symfony/commit/f7200e479c12767282cbdf1613532903ebbb936e",
                 "comments_url": "https://api.github.com/repos/symfony/symfony/commits/f7200e479c12767282cbdf1613532903ebbb936e/comments",
@@ -463,6 +589,24 @@
             },
             {
                 "sha": "3a7f4d41f7080647a1aea06bf4e5c92d29f9eb5e",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-19T09:55:16Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-19T09:55:16Z"
+                    },
+                    "tree": {
+                        "sha": "553ae52d28b7dc1b82efc5f9a5c115465a00e67b",
+                        "url": "https://api.github.com/repos/ruian/symfony/git/trees/553ae52d28b7dc1b82efc5f9a5c115465a00e67b"
+                    },
+                    "url": "https://api.github.com/repos/ruian/symfony/git/commits/3a7f4d41f7080647a1aea06bf4e5c92d29f9eb5e",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/ruian/symfony/commits/3a7f4d41f7080647a1aea06bf4e5c92d29f9eb5e",
                 "html_url": "https://github.com/ruian/symfony/commit/3a7f4d41f7080647a1aea06bf4e5c92d29f9eb5e",
                 "comments_url": "https://api.github.com/repos/ruian/symfony/commits/3a7f4d41f7080647a1aea06bf4e5c92d29f9eb5e/comments",
@@ -487,6 +631,24 @@
             },
             {
                 "sha": "6a843da18937a92b64e9dfb0dd85aa8e7de642c5",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-12-04T14:38:10Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-12-04T14:38:10Z"
+                    },
+                    "tree": {
+                        "sha": "f2e4a05c71adddbfd4e978bc02bbd2f817e0c236",
+                        "url": "https://api.github.com/repos/CrisMKM/zf2/git/trees/f2e4a05c71adddbfd4e978bc02bbd2f817e0c236"
+                    },
+                    "url": "https://api.github.com/repos/CrisMKM/zf2/git/commits/6a843da18937a92b64e9dfb0dd85aa8e7de642c5",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/CrisMKM/zf2/commits/6a843da18937a92b64e9dfb0dd85aa8e7de642c5",
                 "html_url": "https://github.com/CrisMKM/zf2/commit/6a843da18937a92b64e9dfb0dd85aa8e7de642c5",
                 "comments_url": "https://api.github.com/repos/CrisMKM/zf2/commits/6a843da18937a92b64e9dfb0dd85aa8e7de642c5/comments",
@@ -511,6 +673,24 @@
             },
             {
                 "sha": "d73ad9802a5965e7c86eaa03674bd50af4959626",
+                "commit": {
+                    "author": {
+                        "name": "julien.galenski",
+                        "email": "julien.galenski@sensio.com",
+                        "date": "2012-04-13T15:07:09Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-13T20:17:47Z"
+                    },
+                    "tree": {
+                        "sha": "e257962b593b286c13446a6dd55c223f49fb1fea",
+                        "url": "https://api.github.com/repos/symfony/symfony/git/trees/e257962b593b286c13446a6dd55c223f49fb1fea"
+                    },
+                    "url": "https://api.github.com/repos/symfony/symfony/git/commits/d73ad9802a5965e7c86eaa03674bd50af4959626",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/symfony/symfony/commits/d73ad9802a5965e7c86eaa03674bd50af4959626",
                 "html_url": "https://github.com/symfony/symfony/commit/d73ad9802a5965e7c86eaa03674bd50af4959626",
                 "comments_url": "https://api.github.com/repos/symfony/symfony/commits/d73ad9802a5965e7c86eaa03674bd50af4959626/comments",
@@ -535,6 +715,24 @@
             },
             {
                 "sha": "1ee559deec470b2d625e56be96d1f5bc7108df4d",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-20T13:54:12Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-20T13:54:12Z"
+                    },
+                    "tree": {
+                        "sha": "554c2b880c800c901a6c78813804b5236bfcbb59",
+                        "url": "https://api.github.com/repos/symfony/symfony/git/trees/554c2b880c800c901a6c78813804b5236bfcbb59"
+                    },
+                    "url": "https://api.github.com/repos/symfony/symfony/git/commits/1ee559deec470b2d625e56be96d1f5bc7108df4d",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/symfony/symfony/commits/1ee559deec470b2d625e56be96d1f5bc7108df4d",
                 "html_url": "https://github.com/symfony/symfony/commit/1ee559deec470b2d625e56be96d1f5bc7108df4d",
                 "comments_url": "https://api.github.com/repos/symfony/symfony/commits/1ee559deec470b2d625e56be96d1f5bc7108df4d/comments",
@@ -559,6 +757,24 @@
             },
             {
                 "sha": "dcbaa4e0af90552ee0c6a38c2603ca0925b140a8",
+                "commit": {
+                    "author": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-20T13:42:37Z"
+                    },
+                    "committer": {
+                        "name": "Julien 'ruian' Galenski",
+                        "email": "galenski.julien@gmail.com",
+                        "date": "2012-04-20T13:42:37Z"
+                    },
+                    "tree": {
+                        "sha": "9821ddefb242f3db7e6b0a2535637fb520340748",
+                        "url": "https://api.github.com/repos/symfony/symfony/git/trees/9821ddefb242f3db7e6b0a2535637fb520340748"
+                    },
+                    "url": "https://api.github.com/repos/symfony/symfony/git/commits/dcbaa4e0af90552ee0c6a38c2603ca0925b140a8",
+                    "comment_count": 0
+                },
                 "url": "https://api.github.com/repos/symfony/symfony/commits/dcbaa4e0af90552ee0c6a38c2603ca0925b140a8",
                 "html_url": "https://github.com/symfony/symfony/commit/dcbaa4e0af90552ee0c6a38c2603ca0925b140a8",
                 "comments_url": "https://api.github.com/repos/symfony/symfony/commits/dcbaa4e0af90552ee0c6a38c2603ca0925b140a8/comments",

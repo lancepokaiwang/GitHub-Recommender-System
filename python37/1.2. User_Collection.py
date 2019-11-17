@@ -32,7 +32,7 @@ def issue_analysis(issue_dataset=[]):
                 users[data["pull_request"]["user"]["id"]] = get_user_full_data(
                     user_id=data["pull_request"]["user"]["id"])
                 print("User: {} has been created!".format(data["pull_request"]["user"]["id"]))
-                break
+                # break
         if data["pull_commits"]:
             for pull_commit in data["pull_commits"]:
                 if pull_commit["committer"]["id"] not in users:
@@ -84,10 +84,10 @@ def get_user_full_data(user_id=0):
     for commit in user_commits:
         # Delete All Changed Files Information
         del commit["files"]
-        del commit["commit"]
         del commit["author"]
         del commit["stats"]
         del commit["parents"]
+        del commit["commit"]["message"]
         commits.append(commit)
     user_master["commits"] = commits
 

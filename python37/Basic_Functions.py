@@ -16,3 +16,8 @@ def readJsonFile(name="UnKnown", folder="data"):
     with open('{}/{}.json'.format(folder, name)) as json_file:
         dataset = json.load(json_file)
         return dataset
+
+
+def printDictionary(dictionary):
+    for key in dictionary.keys():
+        print(format(key) + ": " + format(dict[key]))

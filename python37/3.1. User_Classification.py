@@ -15,7 +15,7 @@ target = []
 
 CLUSTER_NUM = 2
 
-with open('data/data_users_ready_to_analysis_2.csv', newline='') as csvfile:
+with open('data/data_users_symfony_ready_to_analysis.csv', newline='') as csvfile:
     index = 0
     rows = csv.reader(csvfile)
 
@@ -30,64 +30,51 @@ with open('data/data_users_ready_to_analysis_2.csv', newline='') as csvfile:
                 # Newcomer
                 # print(row[0])
 
-                if row[0] == 'True':
-                    row[0] = bool(1)
-                elif row[0] == 'False':
-                    row[0] = bool(0)
+                # if row[0] == '1':
+                #     row[0] = bool(1)
+                # elif row[0] == '0':
+                #     row[0] = bool(0)
                 row[0] = int(row[0])
 
                 # Age
                 # row[1] = round(int(row[1]) / 365, 2)
-                row[1] = int(row[1]) / 365
-                if int(row[1]) != 0:
-                    row[1] = math.log(int(row[1]), 2)
-
-                # repo_num
-                if int(row[2]) != 0:
-                    row[2] = math.log(int(row[2]), 2)
-
-                # follower_num
+                row[1] = round((int(row[1]) / 365), 4)
+                # if int(row[1]) != 0:
+                #     row[1] = math.log(int(row[1]), 2)
+                #
+                # # repo_num
+                # if int(row[2]) != 0:
+                #     row[2] = math.log(int(row[2]), 2)
+                #
+                # # commit_comment_num
                 # if int(row[3]) != 0:
                 #     row[3] = math.log(int(row[3]), 2)
-                row[3] = 0
+                #
+                # # commit_num
+                # if int(row[4]) != 0:
+                #     row[4] = math.log(int(row[4]), 2)
+                #
+                # # issue_comment_num
+                # if int(row[5]) != 0:
+                #     row[5] = math.log(int(row[5]), 2)
+                #
+                # # issue_event_num
+                # if int(row[6]) != 0:
+                #     row[6] = math.log(int(row[6]), 2)
+                #
+                # # issue_number
+                # if int(row[7]) != 0:
+                #     row[7] = math.log(int(row[7]), 2)
+                #
+                # # pr_comment_num
+                # if int(row[8]) != 0:
+                #     row[8] = math.log(int(row[8]), 2)
+                #
+                # # pr_num
+                # if int(row[9]) != 0:
+                #     row[9] = math.log(int(row[9]), 2)
 
-                # commit_comment_num
-                if int(row[4]) != 0:
-                    row[4] = math.log(int(row[4]), 2)
-
-                # commit_num
-                if int(row[5]) != 0:
-                    row[5] = math.log(int(row[5]), 2)
-
-                # issue_comment_num
-                if int(row[6]) != 0:
-                    row[6] = math.log(int(row[6]), 2)
-
-                # issue_event_num
-                if int(row[7]) != 0:
-                    row[7] = math.log(int(row[7]), 2)
-
-                # issue_number
-                if int(row[8]) != 0:
-                    row[8] = math.log(int(row[8]), 2)
-
-                # org_number
-                if int(row[9]) != 0:
-                    row[9] = math.log(int(row[9]), 2)
-
-                # pr_comment_num
-                if int(row[10]) != 0:
-                    row[10] = math.log(int(row[10]), 2)
-
-                # pr_num
-                if int(row[11]) != 0:
-                    row[11] = math.log(int(row[11]), 2)
-
-                # collaborator_num
-                if int(row[12]) != 0:
-                    row[12] = math.log(int(row[12]), 2)
-
-                data.append(row[1:12])
+                data.append(row[1:-1])
                 # data.append(row[2:12])
                 # data.append([row[1], row[6], row[7], row[8]])
                 # data.append([row[6], row[7], row[8]])
@@ -95,7 +82,6 @@ with open('data/data_users_ready_to_analysis_2.csv', newline='') as csvfile:
                 # data.append([row[10], row[11]])
                 # data.append([row[1], row[6], row[7], row[8], row[10], row[11]])
                 # data.append([row[6], row[7], row[8], row[10], row[11]])
-
 
                 data_original.append(row)
         index += 1
@@ -114,8 +100,8 @@ best_results = {}
 
 for i in range(100):
     kmeans = KMeans(n_clusters=CLUSTER_NUM, init='random', n_init=100, max_iter=100, tol=0.0001,
-                        precompute_distances=True,
-                        verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='elkan').fit(data_kmeans)
+                    precompute_distances=True,
+                    verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='elkan').fit(data_kmeans)
 
     # print(kmeans.labels_)
     target = kmeans.labels_
@@ -163,12 +149,13 @@ with open('data/data_users_cluster_with_results.csv', 'w', newline='') as csvfil
     writer = csv.writer(csvfile)
     # Write first row
     writer.writerow(
-        ['result', 'newcomer', 'age', 'repo_num', 'follower_num', 'commit_comment_num', 'commit_num', 'issue_comment_num', 'issue_event_num', 'issue_number', 'org_number', 'pr_comment_num', 'pr_num', 'collaborator_num'])
+        ['result', 'newcomer', 'age', 'repos', 'commit_comments', 'commits', 'issue_comments', 'issue_events', 'issues', 'pr_comments', 'prs'])
 
     i = 0
     while i < len(target):
         writer.writerow(
-            [target[i], data_original[i][0], data_original[i][1], data_original[i][2], data_original[i][3], data_original[i][4],
+            [target[i], data_original[i][0], data_original[i][1], data_original[i][2], data_original[i][3],
+             data_original[i][4],
              data_original[i][5], data_original[i][6], data_original[i][7],
-             data_original[i][8], data_original[i][9], data_original[i][10], data_original[i][11], data_original[i][12]])
+             data_original[i][8], data_original[i][9]])
         i += 1
