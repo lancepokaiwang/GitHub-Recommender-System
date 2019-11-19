@@ -13,7 +13,7 @@ data_original = []
 data = []
 target = []
 
-CLUSTER_NUM = 3
+CLUSTER_NUM = 2
 REPO = "symfony"
 
 with open('data/ready_to_ana/data_users_{}_ready_to_analysis_2.csv'.format(REPO), newline='') as csvfile:

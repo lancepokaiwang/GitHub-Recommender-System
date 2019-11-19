@@ -11,7 +11,7 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 data = []
 target = []
 
-CLUSTER_NUM = 3
+CLUSTER_NUM = 2
 REPO = "symfony"
 
 with open('data/cluster_result/data_users_{}_cluster_results_only_{}c.csv'.format(REPO, CLUSTER_NUM), newline='') as csvfile:

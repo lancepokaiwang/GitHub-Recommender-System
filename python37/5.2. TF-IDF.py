@@ -49,6 +49,7 @@ dataset = bfs.readJsonFile(name="issues_text_{}".format(REPO), folder="data/issu
 
 countlist = []
 
+
 for issue, context in dataset.items():
     # Pre-process
     content = "{} {}".format(context["title"], context["body"])
@@ -62,11 +63,21 @@ for issue, context in dataset.items():
 
     countlist.append(count)
 
+words_overall = {}
 for i, count in enumerate(countlist):
     print("\n\nTop words in document {}".format(i+1))
     scores = {word: tfidf(word, count, countlist) for word in count}
     sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     for word, score in sorted_words[:10]:
+        if word not in words_overall:
+            words_overall["word"] = score
+        else:
+            words_overall["word"] += score
         print("\tWord: {}, TF-IDF: {}".format(word, round(score, 5)))
+
+
+
+for word, freq in words_overall.items():
+    print("{}: {}".format(word, freq))
 
 
