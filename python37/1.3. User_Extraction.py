@@ -139,8 +139,9 @@ for issue in issues:
     # If issue has commits
     if issue["pull_commits"]:
         for pull_commit in issue["pull_commits"]:
-            earliest_time = get_user_earliest_time(users[str(pull_commit["committer"]["id"])])
-            print(earliest_time)
-            filtered_users.append(generate_user_columns(user_row=users[str(pull_commit["committer"]["id"])], issue_create_date=create_date, earliest_date=earliest_time))
+            if pull_commit["committer"] is not None:
+                earliest_time = get_user_earliest_time(users[str(pull_commit["committer"]["id"])])
+                print(earliest_time)
+                filtered_users.append(generate_user_columns(user_row=users[str(pull_commit["committer"]["id"])], issue_create_date=create_date, earliest_date=earliest_time))
 
 bfs.writeJsonFile(data=filtered_users, name="users_{}_filtered".format(REPO), folder="data")

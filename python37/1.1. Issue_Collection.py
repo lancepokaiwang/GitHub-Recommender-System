@@ -32,19 +32,39 @@ def getIssueData(owner="symfony", repo="symfony", required_labels=["good first i
                 RECORD = True
         if RECORD:
             # --process issue
-            issue["title"] = str(issue["title"]).replace("\"", "'")
-            issue["body"] = str(issue["body"]).replace("\"", "'")
+            del issue["title"]
+            del issue["body"]
+            # issue["title"] = str(issue["title"]).replace("\"", "'")
+            # issue["body"] = str(issue["body"]).replace("\"", "'")
 
             # Get pull request
             pull_request_url = "https://api.github.com/repos/{}/{}/pulls/{}?client_id={}&client_secret={}".format(
                 owner, repo, issue["number"], CLIENT_ID, CLIENT_SECRET)
             print(pull_request_url)
             pull_request = requests.get(pull_request_url, verify=False).json()
-            # --process pull request
+
+            # Get referenced commits
             commits = []
+            issue_event_url = "https://api.github.com/repos/{}/{}/issues/{}/events?client_id={}&client_secret={}".format(
+                owner, repo, issue["number"], CLIENT_ID, CLIENT_SECRET)
+            print(issue_event_url)
+            issue_events = requests.get(issue_event_url, verify=False).json()
+            for issue_event in issue_events:
+                if issue_event["event"] == "referenced":
+                    reference_url = "{}?client_id={}&client_secret={}".format(
+                        issue_event["commit_url"], CLIENT_ID, CLIENT_SECRET)
+                    print(reference_url)
+                    issue_reference = requests.get(reference_url, verify=False).json()
+                    if "url" in issue_reference.keys() and "files" in issue_reference.keys():
+                        del issue_reference["commit"]["message"]
+                        del issue_reference["files"]
+                        commits.append(issue_reference)
+            # --process pull request
             if "number" in pull_request:
-                pull_request["title"] = str(pull_request["title"]).replace("\"", "'")
-                pull_request["body"] = str(pull_request["body"]).replace("\"", "'")
+                del pull_request["title"]
+                del pull_request["body"]
+                # pull_request["title"] = str(pull_request["title"]).replace("\"", "'")
+                # pull_request["body"] = str(pull_request["body"]).replace("\"", "'")
 
                 # Get commit
                 pull_commits_url = "{}?client_id={}&client_secret={}".format(
@@ -53,7 +73,10 @@ def getIssueData(owner="symfony", repo="symfony", required_labels=["good first i
                 pull_commits = requests.get(pull_commits_url, verify=False).json()
                 # --process pull request
                 for pull_commit in pull_commits:
-                    commits.append(pull_commit)
+                    if "url" in pull_commit.keys() and "files" in pull_commit.keys():
+                        del pull_commit["commit"]["message"]
+                        del pull_commit["files"]
+                        commits.append(pull_commit)
             else:
                 pull_request = None
 

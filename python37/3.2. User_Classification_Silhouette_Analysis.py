@@ -16,9 +16,11 @@ import numpy as np
 # together.
 from sklearn.model_selection import train_test_split
 
+REPO = "symfony"
+
 data = []
 
-with open('data/data_users_ready_to_analysis_2.csv', newline='') as csvfile:
+with open('data/ready_to_ana/data_users_{}_ready_to_analysis_2.csv'.format(REPO), newline='') as csvfile:
     index = 0
     rows = csv.reader(csvfile)
 
@@ -31,66 +33,18 @@ with open('data/data_users_ready_to_analysis_2.csv', newline='') as csvfile:
 
             if int(row[3]) < 3000:
                 # Newcomer
-                # print(row[0])
-
-                if row[0] == 'True':
-                    row[0] = bool(1)
-                elif row[0] == 'False':
-                    row[0] = bool(0)
                 row[0] = int(row[0])
 
                 # Age
-                # row[1] = round(int(row[1]) / 365, 2)
-                row[1] = int(row[1]) / 365
-                if int(row[1]) != 0:
-                    row[1] = math.log(int(row[1]), 2)
+                row[1] = round((int(row[1]) / 365), 4)
 
-                # repo_num
-                if int(row[2]) != 0:
-                    row[2] = math.log(int(row[2]), 2)
+                # Rest of features
+                columns = [2, 3, 4, 5, 6, 7, 8, 9]
+                # for i in columns:
+                #     if int(row[i]) != 0:
+                #         row[i] = math.log(int(row[i]), 10)
 
-                # follower_num
-                # if int(row[3]) != 0:
-                #     row[3] = math.log(int(row[3]), 2)
-                row[3] = 0
-
-                # commit_comment_num
-                if int(row[4]) != 0:
-                    row[4] = math.log(int(row[4]), 2)
-
-                # commit_num
-                if int(row[5]) != 0:
-                    row[5] = math.log(int(row[5]), 2)
-
-                # issue_comment_num
-                if int(row[6]) != 0:
-                    row[6] = math.log(int(row[6]), 2)
-
-                # issue_event_num
-                if int(row[7]) != 0:
-                    row[7] = math.log(int(row[7]), 2)
-
-                # issue_number
-                if int(row[8]) != 0:
-                    row[8] = math.log(int(row[8]), 2)
-
-                # org_number
-                if int(row[9]) != 0:
-                    row[9] = math.log(int(row[9]), 2)
-
-                # pr_comment_num
-                if int(row[10]) != 0:
-                    row[10] = math.log(int(row[10]), 2)
-
-                # pr_num
-                if int(row[11]) != 0:
-                    row[11] = math.log(int(row[11]), 2)
-
-                # collaborator_num
-                if int(row[12]) != 0:
-                    row[12] = math.log(int(row[12]), 2)
-
-                data.append([row[6], row[7], row[8]])
+                data.append(row[1:-1])
         index += 1
 
 data_kmeans = np.array(data).astype(np.float64)

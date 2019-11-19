@@ -5,6 +5,21 @@ The project is a content-based filtering approach for suggesting tasks and proje
 See the project proposal [here](PROPOSAL.md)
 
 ***
+## 2019.11.18 Update
+>* Simplified the code.
+>* For 1.1., now we also collected "referenced commits" with issues.
+>* Update K-Means, Decision Tree and Random Forest.
+>* Add TF-IDF analysis for issues.
+
+| Data                                          | Description                                                                                         |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `all_issues_REPO-NAME.json`                   | list of repository issues (also includs it's pr, commits) that are bug fixes and/or "easy pick"     |
+| `users_REPO-NAME.json`                        | list of users from issues that are bug fixes and/or "easy pick" (THIS FILE MAY BE TOO HUGE TO OPEN) |
+| `users_REPO-NAME_filtered.json`               | filtered user json file. include different ages with same user.                                     |
+| `data_users_REPO-NAME_ready_to_analysis.csv`  | csv format file of `users_REPO-NAME_filtered.json`                                                  |
+| `data_users_cluster_with_results.csv`         | K-Means result table                                                                                |
+| `issue_text_REPO-NAME.json`                   | textual content of each issue                                                                       |
+
 ## 2019.11.17 Update
 >* Simplified the code.
 >* For 1.1., now only concern users who submit pr and commits whth related the issues with "Easy Pick" label
@@ -12,15 +27,6 @@ See the project proposal [here](PROPOSAL.md)
 >* For 1.2., now collect users' whole data in order to save needed time when future usage.
 >* For 1.3., simplified the user data extraction process.
 >* For 2.1. and 2.1.2., modified the code to fit latest version of data files.
-
-| Data                                          | Description                                                                                         |
-| --------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `all_issues_REPO-NAME.json`                   | list of repository issues (also includs it's pr, commits) that are bug fixes and/or "easy pick"     |
-| `users_REPO-NAME.json`                        | list of users from issues that are bug fixes and/or "easy pick" (THIS FILE MAY BE TOO HUGE TO OPEN) |
-| `users_REPO-NAME_filtered.json`                | filtered user json file. include different ages with same user.                                     |
-| `data_users_REPO-NAME_ready_to_analysis.csv`  | csv format file of `users_REPO-NAME_filtered.json`                                                   |
-| `data_users_cluster_with_results.csv`         | K-Means result table                                                                                |
-
 
 ## 2019.11.12 Update
 >* For 1.1., modify the process logic in order to reduce the time needed.

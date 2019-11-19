@@ -33,11 +33,15 @@ def issue_analysis(issue_dataset=[]):
                     user_id=data["pull_request"]["user"]["id"])
                 print("User: {} has been created!".format(data["pull_request"]["user"]["id"]))
                 # break
+                return users
         if data["pull_commits"]:
             for pull_commit in data["pull_commits"]:
-                if pull_commit["committer"]["id"] not in users:
-                    users[pull_commit["author"]["id"]] = get_user_full_data(user_id=pull_commit["author"]["id"])
-                    print("User: {} has been created!".format(pull_commit["committer"]["id"]))
+                if pull_commit["committer"] is not None:
+                    if pull_commit["committer"]["id"] not in users:
+                        users[pull_commit["author"]["id"]] = get_user_full_data(user_id=pull_commit["author"]["id"])
+                        print("User: {} has been created!".format(pull_commit["committer"]["id"]))
+                        # break
+                        return users
     return users
 
 
@@ -50,8 +54,9 @@ def get_user_full_data(user_id=0):
 
     # Get user repos
     repos = []
-    user_repos = mg_db["repos"].find({"owner.id": user_id}, {"_id": 0})
+    user_repos = mg_db["repos"].find({"owner.id": user_id})
     for repo in user_repos:
+        del repo["_id"]
         repos.append(repo)
     user_master["repos"] = repos
 
@@ -71,8 +76,9 @@ def get_user_full_data(user_id=0):
 
     # Get user commit comments
     commit_comments = []
-    user_commit_comments = mg_db["commit_comments"].find({"user.id": user_id}, {"_id": 0})
+    user_commit_comments = mg_db["commit_comments"].find({"user.id": user_id})
     for commit_comment in user_commit_comments:
+        del commit_comment["_id"]
         del commit_comment["body"]
         # commit_comment["body"] = str(commit_comment["body"]).replace("\"", "")
         commit_comments.append(commit_comment)
@@ -80,9 +86,10 @@ def get_user_full_data(user_id=0):
 
     # Get user commits
     commits = []
-    user_commits = mg_db["commits"].find({"committer.id": user_id}, {"_id": 0})
+    user_commits = mg_db["commits"].find({"committer.id": user_id})
     for commit in user_commits:
         # Delete All Changed Files Information
+        del commit["_id"]
         del commit["files"]
         del commit["author"]
         del commit["stats"]
@@ -93,8 +100,9 @@ def get_user_full_data(user_id=0):
 
     # Get user issue comments
     issue_comments = []
-    user_issue_comments = mg_db["issue_comments"].find({"user.id": user_id}, {"_id": 0})
+    user_issue_comments = mg_db["issue_comments"].find({"user.id": user_id})
     for issue_comment in user_issue_comments:
+        del issue_comment["_id"]
         del issue_comment["body"]
         # issue_comment["body"] = str(issue_comment["body"]).replace("\"", "")
         issue_comments.append(issue_comment)
@@ -102,15 +110,17 @@ def get_user_full_data(user_id=0):
 
     # Get user issue events
     issue_events = []
-    user_issue_events = mg_db["issue_events"].find({"actor.id": user_id}, {"_id": 0})
+    user_issue_events = mg_db["issue_events"].find({"actor.id": user_id})
     for issue_event in user_issue_events:
+        del issue_event["_id"]
         issue_events.append(issue_event)
     user_master["issue_events"] = issue_events
 
     # Get user issues
     issues = []
-    user_issues = mg_db["issues"].find({"user.id": user_id}, {"_id": 0})
+    user_issues = mg_db["issues"].find({"user.id": user_id})
     for issue in user_issues:
+        del issue["_id"]
         del issue["title"]
         del issue["body"]
         # issue["title"] = str(issue["title"]).replace("\"", "")
@@ -120,9 +130,10 @@ def get_user_full_data(user_id=0):
 
     # Get user pr comments
     pr_comments = []
-    user_pr_comments = mg_db["pull_request_comments"].find({"user.id": user_id}, {"_id": 0})
+    user_pr_comments = mg_db["pull_request_comments"].find({"user.id": user_id})
     for pr_comment in user_pr_comments:
         # pr_comment["body"] = str(pr_comment["body"]).replace("\"", "")
+        del pr_comment["_id"]
         del pr_comment["_links"]
         del pr_comment["body"]
         del pr_comment["diff_hunk"]
@@ -131,8 +142,9 @@ def get_user_full_data(user_id=0):
 
     # Get user prs
     prs = []
-    user_prs = mg_db["pull_requests"].find({"user.id": user_id}, {"_id": 0})
+    user_prs = mg_db["pull_requests"].find({"user.id": user_id})
     for pr in user_prs:
+        del pr["_id"]
         del pr["head"]
         del pr["_links"]
         del pr["title"]
@@ -160,4 +172,4 @@ users_dataset = issue_analysis(issue_dataset=dataset)
 
 print(users_dataset)
 
-bfs.writeJsonFile(data=users_dataset, name="users_{}".format(REPO), folder="data")
+bfs.writeJsonFile(data=users_dataset, name="users_{}_test".format(REPO), folder="data")

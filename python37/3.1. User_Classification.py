@@ -13,9 +13,10 @@ data_original = []
 data = []
 target = []
 
-CLUSTER_NUM = 2
+CLUSTER_NUM = 3
+REPO = "symfony"
 
-with open('data/data_users_symfony_ready_to_analysis.csv', newline='') as csvfile:
+with open('data/ready_to_ana/data_users_{}_ready_to_analysis_2.csv'.format(REPO), newline='') as csvfile:
     index = 0
     rows = csv.reader(csvfile)
 
@@ -26,64 +27,22 @@ with open('data/data_users_symfony_ready_to_analysis.csv', newline='') as csvfil
             # print(row)
             # row = [int(x) for x in row]
 
-            if int(row[3]) < 3000:
-                # Newcomer
-                # print(row[0])
+            # Newcomer
+            row[0] = int(row[0])
 
-                # if row[0] == '1':
-                #     row[0] = bool(1)
-                # elif row[0] == '0':
-                #     row[0] = bool(0)
-                row[0] = int(row[0])
+            # Age
+            row[1] = round((int(row[1]) / 365), 4)
 
-                # Age
-                # row[1] = round(int(row[1]) / 365, 2)
-                row[1] = round((int(row[1]) / 365), 4)
-                # if int(row[1]) != 0:
-                #     row[1] = math.log(int(row[1]), 2)
-                #
-                # # repo_num
-                # if int(row[2]) != 0:
-                #     row[2] = math.log(int(row[2]), 2)
-                #
-                # # commit_comment_num
-                # if int(row[3]) != 0:
-                #     row[3] = math.log(int(row[3]), 2)
-                #
-                # # commit_num
-                # if int(row[4]) != 0:
-                #     row[4] = math.log(int(row[4]), 2)
-                #
-                # # issue_comment_num
-                # if int(row[5]) != 0:
-                #     row[5] = math.log(int(row[5]), 2)
-                #
-                # # issue_event_num
-                # if int(row[6]) != 0:
-                #     row[6] = math.log(int(row[6]), 2)
-                #
-                # # issue_number
-                # if int(row[7]) != 0:
-                #     row[7] = math.log(int(row[7]), 2)
-                #
-                # # pr_comment_num
-                # if int(row[8]) != 0:
-                #     row[8] = math.log(int(row[8]), 2)
-                #
-                # # pr_num
-                # if int(row[9]) != 0:
-                #     row[9] = math.log(int(row[9]), 2)
+            # Rest of features
+            columns = [2, 3, 4, 5, 6, 7, 8, 9]
+            for i in columns:
+                if int(row[i]) != 0:
+                    row[i] = math.log(int(row[i]), 10)
 
-                data.append(row[1:-1])
-                # data.append(row[2:12])
-                # data.append([row[1], row[6], row[7], row[8]])
-                # data.append([row[6], row[7], row[8]])
-                # data.append([row[1], row[10], row[11]])
-                # data.append([row[10], row[11]])
-                # data.append([row[1], row[6], row[7], row[8], row[10], row[11]])
-                # data.append([row[6], row[7], row[8], row[10], row[11]])
+            data.append(row[1:-1])
 
-                data_original.append(row)
+            data_original.append(row)
+
         index += 1
 
 data_kmeans = np.array(data)
@@ -111,7 +70,7 @@ for i in range(100):
     # print(kmeans.cluster_centers_)
 
     # save the model to disk
-    filename = 'models/user_kmeans_{}c.sav'.format(CLUSTER_NUM)
+    filename = 'models/user_kmeans_{}_{}c.sav'.format(REPO, CLUSTER_NUM)
     joblib.dump(kmeans, filename)
 
     # Data Validation
@@ -144,17 +103,36 @@ print(best_results)
 # target = target.tolist()
 
 # Open CSV reader
-with open('data/data_users_cluster_with_results.csv', 'w', newline='') as csvfile:
+with open('data/cluster_result/data_users_{}_cluster_with_results_{}c.csv'.format(REPO, CLUSTER_NUM), 'w', newline='') as csvfile:
     # Create CSV writer
     writer = csv.writer(csvfile)
     # Write first row
     writer.writerow(
-        ['result', 'newcomer', 'age', 'repos', 'commit_comments', 'commits', 'issue_comments', 'issue_events', 'issues', 'pr_comments', 'prs'])
+        ['result', 'newcomer', 'age', 'repos', 'commit_comments', 'commits', 'issue_comments', 'issue_events', 'issues',
+         'pr_comments', 'prs'])
 
     i = 0
     while i < len(target):
         writer.writerow(
             [target[i], data_original[i][0], data_original[i][1], data_original[i][2], data_original[i][3],
+             data_original[i][4],
+             data_original[i][5], data_original[i][6], data_original[i][7],
+             data_original[i][8], data_original[i][9]])
+        i += 1
+
+# Only include results
+with open('data/cluster_result/data_users_{}_cluster_results_only_{}c.csv'.format(REPO, CLUSTER_NUM), 'w', newline='') as csvfile:
+    # Create CSV writer
+    writer = csv.writer(csvfile)
+    # Write first row
+    writer.writerow(
+        ['newcomer', 'age', 'repos', 'commit_comments', 'commits', 'issue_comments', 'issue_events', 'issues',
+         'pr_comments', 'prs'])
+
+    i = 0
+    while i < len(target):
+        writer.writerow(
+            [target[i], data_original[i][1], data_original[i][2], data_original[i][3],
              data_original[i][4],
              data_original[i][5], data_original[i][6], data_original[i][7],
              data_original[i][8], data_original[i][9]])
