@@ -4,7 +4,7 @@ import math
 from sklearn.datasets import make_blobs
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_samples, silhouette_score
-
+from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
@@ -27,37 +27,19 @@ with open('data/ready_to_ana/data_users_{}_ready_to_analysis_2.csv'.format(REPO)
     for row in rows:
         # print(row)
         if index != 0:
-            # if index != 0:
-            # print(row)
-            # row = [int(x) for x in row]
-
             if int(row[3]) < 3000:
                 # Newcomer
                 row[0] = int(row[0])
-
                 # Age
                 row[1] = round((int(row[1]) / 365), 4)
-
-                # Rest of features
-                columns = [2, 3, 4, 5, 6, 7, 8, 9]
-                # for i in columns:
-                #     if int(row[i]) != 0:
-                #         row[i] = math.log(int(row[i]), 10)
-
+                # Add data
                 data.append(row[1:-1])
         index += 1
 
+data = preprocessing.scale(data)
 data_kmeans = np.array(data).astype(np.float64)
 
 X, y = train_test_split(data, test_size=0.3)
-
-# X, y = make_blobs(n_samples=500,
-#                   n_features=2,
-#                   centers=4,
-#                   cluster_std=1,
-#                   center_box=(-10.0, 10.0),
-#                   shuffle=True,
-#                   random_state=1)  # For reproducibility
 
 range_n_clusters = [2, 3, 4, 5, 6]
 
