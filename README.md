@@ -6,8 +6,8 @@ See the project proposal [here](PROPOSAL.md)
 
 ***
 ## 2019.11.24 Update
->* Fix preprocessing for issues_text; escape characters were being removed and fixed in (https://github.com/jonlamca/comp5117-lam-wang/commit/553764211ce708fe8d373ad5299593b06a282c53)
->* TF-IDF results for title, body, and title-body (https://github.com/jonlamca/comp5117-lam-wang/tree/ecdd1e495774e1e8f7880d139ed132fa9aa0b3e7/python37/data/issue_text) These were calculate separately for weighting purposes
+>* Fix preprocessing for issues_text; escape characters were being removed and fixed in [commit](https://github.com/jonlamca/comp5117-lam-wang/commit/553764211ce708fe8d373ad5299593b06a282c53)
+>* TF-IDF results for title, body, and title-body. See [results](https://github.com/jonlamca/comp5117-lam-wang/tree/59d73e2/python37/data/issue_text) These were calculate separately for weighting purposes
 >* Todo incoporate commit documents 
 
 
