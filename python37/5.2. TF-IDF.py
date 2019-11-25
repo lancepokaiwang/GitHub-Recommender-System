@@ -1,28 +1,38 @@
+from nltk.stem import WordNetLemmatizer
+import Basic_Functions as bfs
+from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.stem.porter import *
+from collections import Counter
 import nltk
-# nltk.download('punkt')
-# nltk.download('stopwords')
 import math
 import string
 from nltk.corpus import stopwords
-from collections import Counter
-from nltk.stem.porter import *
-from sklearn.feature_extraction.text import TfidfVectorizer
-import Basic_Functions as bfs
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 OWNER = "symfony"
 REPO = "symfony"
 
-
-def get_tokens(text):
-    lowers = text.lower()
-    # remove the punctuation using the character deletion step of translate
+def clean(text):
     remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
-    no_punctuation = lowers.translate(remove_punctuation_map)
-    tokens = nltk.word_tokenize(no_punctuation)
+    return text.lower().translate(remove_punctuation_map)
+
+def tokenize(text):
+    tokens = nltk.word_tokenize(text)
     return tokens
 
+def remove_stopwords(tokens):
+    return [w for w in tokens if not w in stopwords.words('english')] 
 
-def stem_tokens(tokens, stemmer):
+def lemmatize(tokens, lemmatizer):
+    output = []
+    for token in tokens:
+        output.append(lemmatizer.lemmatize(token))
+    return output
+
+
+def stem(tokens, stemmer):
     stemmed = []
     for item in tokens:
         stemmed.append(stemmer.stem(item))
@@ -32,6 +42,21 @@ def stem_tokens(tokens, stemmer):
 def tf(word, count):
     return count[word] / sum(count.values())
 
+def tf_idf_document(tf_document, corpus):
+    output = []
+    total = len(corpus)
+    for word, tf in tf_document:
+        idf = total/corpus[word]
+        print("word: {} total:{} count:{} idf:{}".format(word, total, corpus[word], idf))
+        output.append((word, tf * idf))
+    return output
+
+def tf_document(document_count):
+    output = []
+    total = len(document_count)
+    for word, count in document_count.items():
+        output.append((word,count/total))
+    return output
 
 def n_containing(word, count_list):
     return sum(1 for count in count_list if word in count)
@@ -45,39 +70,59 @@ def tfidf(word, count, count_list):
     return tf(word, count) * idf(word, count_list)
 
 
-dataset = bfs.readJsonFile(name="issues_text_{}".format(REPO), folder="data/issue_text")
+issues = bfs.readJsonFile(name="issues_text_{}".format(REPO), folder="data/issue_text").items()
+output_tf_idf = {}
+output_dataset_processed = {}
+lemmatizer = WordNetLemmatizer()
+stemmer = PorterStemmer()
+corpus_title_word_list = []
+corpus_body_word_list = []
+corpus_title_body_word_list = []
 
-countlist = []
+for issue, text in issues:
+
+    github_id = text["github_issue_id"]
+    clean_title_text = clean(text["title"])
+    clean_body_text = clean(text["body"])
+
+    title_words = remove_stopwords(tokenize(clean_title_text))
+    body_words = remove_stopwords(tokenize (clean_body_text))
+
+    title_processed = lemmatize(title_words, lemmatizer)
+    body_processed = lemmatize(body_words, lemmatizer)
+
+    output_dataset_processed[issue] = {
+        "title": clean_title_text,
+        "body": clean_body_text,
+        "github_issue_id": github_id,
+        "title_processed": title_processed,
+        "body_processed": body_processed,
+    }
+
+    count_title = Counter(title_processed)
+    count_body = Counter(body_processed)
+    count_title_body = count_title + count_body
+
+    corpus_title_word_list.extend(list(count_title))
+    corpus_body_word_list.extend(list(count_body))
 
 
-for issue, context in dataset.items():
-    # Pre-process
-    content = "{} {}".format(context["title"], context["body"])
-    tokens = get_tokens(content)
-    filtered = [w for w in tokens if not w in stopwords.words('english')]
-    stemmer = PorterStemmer()
-    stemmed = stem_tokens(filtered, stemmer)
+    output_tf_idf[issue] = {
+        "github_issue_id": github_id,
+        "title": tf_document(count_title),
+        "body": tf_document(count_body),
+        "title_body": tf_document(count_title_body),
+    }
 
-    count = Counter(stemmed)
-    print(count)
+corpus_title = Counter(corpus_title_word_list)
+corpus_body = Counter(corpus_body_word_list)
 
-    countlist.append(count)
+bfs.writeJsonFile(output_tf_idf,"issues_tf_" + REPO,"data/issue_text")
 
-words_overall = {}
-for i, count in enumerate(countlist):
-    print("\n\nTop words in document {}".format(i+1))
-    scores = {word: tfidf(word, count, countlist) for word in count}
-    sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    for word, score in sorted_words[:10]:
-        if word not in words_overall:
-            words_overall["word"] = score
-        else:
-            words_overall["word"] += score
-        print("\tWord: {}, TF-IDF: {}".format(word, round(score, 5)))
+for i, document in output_tf_idf.items():
+    document["title"] = tf_idf_document(document["title"],corpus_title)
+    document["body"] = tf_idf_document(document["body"],corpus_body)
+    document["title_body"] = tf_idf_document(document["title_body"],corpus_title + corpus_body)
 
-
-
-for word, freq in words_overall.items():
-    print("{}: {}".format(word, freq))
-
-
+bfs.writeJsonFile(output_tf_idf,"issues_tf_idf_" + REPO,"data/issue_text")
+bfs.writeJsonFile(output_dataset_processed,"processed_issues_text_" + REPO,"data/issue_text")
