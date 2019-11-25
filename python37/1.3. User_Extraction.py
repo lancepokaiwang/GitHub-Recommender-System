@@ -1,6 +1,8 @@
 import datetime
-
+import urllib3
 import Basic_Functions as bfs
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # GitHub API oAuth
 CLIENT_ID = "6aca4b66775c629cbafd"
