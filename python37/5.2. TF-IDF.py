@@ -42,20 +42,20 @@ def stem(tokens, stemmer):
 def tf(word, count):
     return count[word] / sum(count.values())
 
-def tf_idf_document(tf_document, corpus):
-    output = []
-    total = len(corpus)
-    for word, tf in tf_document:
-        idf = total/corpus[word]
-        print("word: {} total:{} count:{} idf:{}".format(word, total, corpus[word], idf))
-        output.append((word, tf * idf))
-    return output
-
 def tf_document(document_count):
     output = []
     total = len(document_count)
     for word, count in document_count.items():
         output.append((word,count/total))
+    return output
+
+def tf_idf_document(tf_document, corpus):
+    output = []
+    total = len(corpus)
+    for word, tf in tf_document:
+        idf = math.log(total/corpus[word])
+        print("word: {} total:{} count:{} idf:{}".format(word, total, corpus[word], idf))
+        output.append((word, tf * idf))
     return output
 
 def n_containing(word, count_list):
