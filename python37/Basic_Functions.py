@@ -1,5 +1,10 @@
 import json
+import requests
 
+# this does not affect rate limit
+def checkGitHubLimit (username, token):
+    limit = requests.get("https://api.github.com/rate_limit", verify=False, auth=(username,token)).json()["resources"]["core"]
+    return limit
 
 def writeJsonFile(data: object = None, name: object = "UnKnown", folder: object = "data") -> object:
     if data is not None:
