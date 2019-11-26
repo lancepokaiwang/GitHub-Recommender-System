@@ -5,6 +5,11 @@ The project is a content-based filtering approach for suggesting tasks and proje
 See the project proposal [here](PROPOSAL.md)
 
 ***
+## 2019.11.26 Update
+>* Add 1.4. User_Textual_Data_Extraction.py to extract users' textual history records.
+>* Add 5.3. User_TF-IDF.py to apply TF-IDF for users. See [results](https://github.com/jonlamca/comp5117-lam-wang/tree/master/python37/data/user_text)
+
+
 ## 2019.11.24 Update
 >* Fix preprocessing for issues_text; escape characters were being removed and fixed in [commit](https://github.com/jonlamca/comp5117-lam-wang/commit/553764211ce708fe8d373ad5299593b06a282c53)
 >* TF-IDF results for title, body, and title-body. See [results](https://github.com/jonlamca/comp5117-lam-wang/tree/59d73e2/python37/data/issue_text) These were calculate separately for weighting purposes
