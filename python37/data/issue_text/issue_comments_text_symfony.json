@@ -1,0 +1,972 @@
+{
+  "18230678": {
+    "comments": [
+      ":+1:\n\nI wanted to create a PR some time ago to a repo. The repo required Symfony 2.1 in it's composer.json. I had to search through Symfony's branches to find out the method I wanted to use was only added in Symfony 2.2, so a @since tag would've saved me some time.\n",
+      ":+1:\nThat's a great idea but it should be hard to cover all core with this tag, no? It requires a complete knowledge of all methods and classes.\n",
+      "@eko That knowledge is stored in Git. The command\n\n``` bash\ngit tag --contains `git blame -L <line>,<line> <file> | cut -c1-8`\n```\n\ngives you a rough idea in which tags a line of a file is contained. I'm not sure though whether this command works in all cases (e.g. when lines are moved within a file).\n\nFor example:\n\n``` bash\n$ git tag --contains `git blame -L 22,22 src/Symfony/Component/Form/Button.php | cut -c1-8`\nv2.3.0\nv2.3.0-BETA1\nv2.3.0-BETA2\nv2.3.0-RC1\nv2.3.1\nv2.3.2\nv2.3.3\n```\n\nAs a shell script:\n\n``` bash\n#!/bin/bash\n# lookup.sh\ngit tag --contains `git blame -L $2,$2 $1 | cut -c1-8 | head -n 1`\n```\n\nUsage:\n\n``` bash\n$ ./lookup.sh src/Symfony/Component/Form/Button.php 22\nv2.3.0\n```\n\nEverybody is invited to work on this ticket by picking one component/bridge/bundle at a time and looking up the version of each class and method. :)\n",
+      "Ok, i'm convinced ;)\nThis coupled with the effort of the community should give a good result.\n",
+      "I'll take DI Component\n",
+      "I think There is a simple way to automatize that with https://github.com/nikic/PHP-Parser + script shell from @bschussek \n",
+      "@lyrixx Not sure if developing the automated version takes longer than doing it by hand, but sure - feel free to do it :)\n",
+      "He hasn't time for that :)\n",
+      "Huhu. It's [the week end](http://isitweekendyet.com/)\n",
+      "If did a little script to tag every method/class.\n- Should I tag all methods (protected and private) ? \n- I excluded Tests, is that ok ?\n",
+      "Yes, you can include private and protected methods, and yes, you can exclude tests :)\n",
+      "Whats the point of annotating private methods with `since`?\n",
+      "@Tobion For me it's maintenance again. If I discover a bug, I immediately know where to fix it.\n",
+      "Hm well not really. If there is a bug in a private function added in 2.3, it doesn't mean the bug doesnt exist in 2.2 and must be fixed there. Because the private function was just extracted from a public method. So this bug can exist since much longer ago.\n",
+      "Isn't the same true for public methods? If we refactor code, buggy code pieces can be moved, but it will be hard to find out where the bug occurred for the first time.\n\nThe point here is, if a method is annotated with `@since`, I can fix exactly this method in all versions that contain this method. Trying to find and fix the bug in prior versions is manual work anyway, independent of whether we use `@since` tags, `git blame` etc.\n",
+      "BTW, I added `-C` and `-M` to my git blame.\n\n> ```\n>    -M|<num>|                                                                                                                                      \n>        Detect moved or copied lines within a file. When a commit moves or copies a block of lines (e.g. the original file has A and then B,       \n>        and the commit changes it to B and then A), the traditional blame algorithm notices only half of the movement and typically blames the     \n>        lines that were moved up (i.e. B) to the parent and assigns blame to the lines that were moved down (i.e. A) to the child commit. With     \n>        this option, both groups of lines are blamed on the parent by running extra passes of inspection.                                          \n> \n>       <num> is optional but it is the lower bound on the number of alphanumeric characters that git must detect as moving/copying within a       \n>        file for it to associate those lines with the parent commit. The default value is 20.                                                      \n> \n>   -C|<num>|                                                                                                                                      \n>        In addition to -M, detect lines moved or copied from other files that were modified in the same commit. This is useful when you            \n>        reorganize your program and move code around across files. When this option is given twice, the command additionally looks for copies      \n>        from other files in the commit that creates the file. When this option is given three times, the command additionally looks for copies     \n>        from other files in any commit.                                                                                                            \n> \n>       <num> is optional but it is the lower bound on the number of alphanumeric characters that git must detect as moving/copying between        \n>        files for it to associate those lines with the parent commit. And the default value is 40. If there are more than one -C options given,    \n>        the <num> argument of the last -C will take effect.  \n> ```\n",
+      "If there is a bug in a private method, it must be fixed in the version which is annotated at public/protected method that calls this private method. Or not? So a since tag on private method is still helpfull, but doesnt say much.\n",
+      "this is not an easy-pick anymore as it is selectively and only when needed, plus it was automated by @lyrixx \n\ni wonder if you send PRs for say a small component such as config or yaml alone in separate PR. surely the script can do separate things. I personally don't like it because it expands the code lengths on all files thereby making them harder to read.\n",
+      "Since we're only eager to do it selectively, is there any value in doing this at all? The motivation was to be able to find where a method was introduced. Introducing `@since` selectively defeats the purpose.\n\nI'd just close this issue.\n",
+      "I've got the same feelings like @jakzal, also I'm not sure if this is a good idea at all. IMHO, this is the same issue as with @author - we don't use it because we have GIT. Mostly, it's quite simply to find when some method or class was added to repository so adding @since comment seems to be unnecessary.\n",
+      "BTW, this is not an easy pick...\n",
+      "Is this going to happend?\n\nI think the best way to start is taking 2.0 and see if the funcion still exist and add since 2.0...\n",
+      "Closing as it's not going to happen.\n"
+    ]
+  },
+  "16262415": {
+    "comments": [
+      "Do you suggest to create the Crawler through a factory based on content-type?\n",
+      "If we made browserkit to call `CssSelector::disableHtmlExtension()`, we could potentially introduce unexpected side effects (in cases CssSelector was used in other places).\n\nThe safest way would be to disable it in the `Crawler::filter()` method and enable it back before returning from this method. However, we'd have to make an extra effort to store the content type while adding content. Problem is that potentially a Crawler could store content of multiple types (at least there's no mechanism to prevent this).\n",
+      "@fabpot As long as we rely on the static API of the component to do this, it cannot be solved because of the impact on a global state (reason to reject the previous PR).\n\nthe solution could be to make the DomCrawler component build its own instance of the CssSelector Translator (maybe introducing a factory method in the CssSelector component to keep the list of extension there).\nAnother solution is to add a getter for the `CssSelector::$html` flag, to allow the DomCrawler to reset the state properly)\n",
+      "This will be fixed in Symfony 2.8 thanks to #15934\n"
+    ]
+  },
+  "15752417": { "comments": [] },
+  "13800942": {
+    "comments": [
+      "Getting the PID is possible in 2.3: https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Process/Process.php#L458\n",
+      "For the first point, it should be very easy to add a flush method.\n"
+    ]
+  },
+  "13169284": {
+    "comments": [
+      "That's indeed an interesting point of view and having a way to relax the internal validation would be a good addition to the component. I'm tagging it as an easy pick as it should be trivial to implement.\n",
+      "But it won't be accepted for the 2.1 branch, right?\n",
+      "@craue Correct, that's a new feature that should be done for master.\n",
+      "I adjusted the title respectively.\n"
+    ]
+  },
+  "11098174": {
+    "comments": [
+      "Actually this is already possible.\n\n```\nservices:\n    site.my_firewall.request_matcher:\n        class: Symfony\\Component\\HttpFoundation\\RequestMatcher\n        arguments: [/, www\\.host\\.eu]\n\nsecurity:\n    firewalls:\n        my_firewall:\n            request_matcher: site.my_firewall.request_matcher \n```\n\nhttps://github.com/symfony/symfony/blob/2.2/src/Symfony/Component/HttpFoundation/RequestMatcher.php\nNote: Remember that the hostname is a regex, not a pattern.\n",
+      "To create a service just to match a host name seems cumbersome. It doesn't make sense that you can configure this at your routing, but not at the routing part of the security config.\n",
+      "can you update your issue title by adding `[RFC]` ? thanks.\n\nIMHO, this is could be a good idea.\n",
+      "Anyone willing to work on a patch?\n",
+      "Sure, I'll see if I can figure it out\n",
+      "How do I attach commits to this issue? I'm using `hub pull-request -i {number}` in our own projects, but I think I'm not allowed to do this in the symfony repo?\n",
+      "I'm not using hub, but you can just create a PR and reference this issue.\n",
+      "@fabpot this should be closed?\n"
+    ]
+  },
+  "10412830": {
+    "comments": [
+      "Note that I've fixed this in a fork: https://github.com/relaxnow/BrowserKit/commit/40765910a61f798abd68dd4654cc66b16bc0477e\n"
+    ]
+  },
+  "9374910": {
+    "comments": [
+      "@fabpot would you accept such an PR?\n",
+      "FYI, `PATH_INFO` comes from CGI. But since HttpFoundation is translating CGI back to HTTP, `path` may indeed make more sense.\n",
+      "Yes, I'm aware of that and this is definitely the reason why it was named this way. And I agree with you that since we deal with HTTP, not CGI, we should not do the same mistake.\n",
+      "I agree with you but I'm -1 for changing this at this point. Probably something to be done for 3.0\n",
+      "Well, I changed by mind. The `getPathInfo()` does not return the full URI path but only the path after the script file.\nSo it is correct not to name it `getPath`.\nBut then there is an inconsistency elsewhere: `getUriForPath` is wrong. The correct name according to the current behavior would be `getUriForPathInfo`...\nAnd the names for `getBaseUrl` and `getBasePath` are both unfortunate because the only difference is the inclusion of the script file name and has nothing to do with URL vs path.\n",
+      "@Tobion - how about adding a new method `getUriForPathInfo` and deprecating `getUriForPath` ? \n",
+      "the getUriForPath method is used qui frequently. So, again, let's do an overall in 3.0.\n",
+      "I would love to see the public properties being hidden away in getters. This is already possible for 2.6 and easy to implement. The public properties could then be marked as deprecated and made private in 3.0.\n",
+      "`getUri` should return the full URI of the resource beeing requested. And I guess `getRequestUri` is/should based on http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html\nSo it should return the request URI that was used in the request line. That can be the full uri, or absulte path etc. According to the rfc it could also be `*`. Anyway, I don' think the request class really returns the request uri according to the rfc.\n",
+      "http://tools.ietf.org/html/rfc3875\n\n```\n script-URI = <scheme> :// <server-name> : <server-port>\n                   <script-path> <extra-path> ? <query-string>\n\n where <scheme> is found from SERVER_PROTOCOL, <server-name>,\n   <server-port> and <query-string> are the values of the respective\n   meta-variables.  The SCRIPT_NAME and PATH_INFO values, URL-encoded\n   with ;, = and ?  reserved, give <script-path> and <extra-path>.\n```\n\nSo I think the the request class should have \n\n```\nfunction getPath() // returns the full path of a request, e.g. /app.php/foo\nfunction getScriptPath() // returns the path of a request to the executing script (front controller), e.g. /app.php\nfunction getExtraPath() // returns the path of a request without the script, e.g. /foo\n```\n\nThe disadvantage is that people who don't want to ignore the script part (like routing) would need to call something like `$realPath = $request->getExtraPath() ?: $request->getPath()`. So maybe its better to invert the logic:\n\n```\nfunction getFullPath() // returns the full path of a request, e.g. /app.php/foo\nfunction getScriptPath() // returns the path of a request to the executing script (front controller), e.g. /app.php\nfunction getPath() // returns the path of a request without the script, e.g. /foo\n```\n",
+      "PSR-7 looks good to me. So IMO Symfony 3.0 Request/Response should be based on that.\n",
+      "> So IMO Symfony 3.0 Request/Response should be based on that.\n\nIs there any specific work going on in that direction? I've recently ported our app (https://github.com/volkszaehler/volkszaehler.org) to HTTPKernelInterface (and ReactPHP...) and would like to understand where to go with this once PSR-7 is alive.\n",
+      "@andig : that might depend on if we can get a PSR for HttpKernelInterface too. once PSR-7 is voted on, then hopefully we can move towards that.\n",
+      "> So either a Request should be immutable or mutable\n\nI make some profiling and realize that isSecure, getHost and so on methods usually return same result, because headers and server bags that is involved in results of this methods usually are not changed. And for now there is a lot of unnecessary calculations. Immutable request can help to avoid them.\n",
+      "> There are several inconsistent method names and I think the class can be better designed.\n\nI would like to add that the constructors (if not using the factory methods) make it easy to create inconsistent representations. If I e.g. construct with `$request` parameters but forget `$content`, the request object will itself represent something that doesn't exist in HTTP. I was wondering if such logical inconsistencies should be errored or warned (probably not) or corrected by the `Request` implementation?\n\nIf off-topic please ignore.\n"
+    ]
+  },
+  "9103421": {
+    "comments": [
+      "I think this was fixed in #7500.\n",
+      "@kepten\n\n#7500 just completely broke it\n\nIn `function setNode(\\DOMNode $node)` in `Symphony/Component/DomCrawler/Form.php` the following piece of code,\n\n```\n$formId = $node->getAttribute('form');\n$form = $node->ownerDocument->getElementById($formId);\nif (null === $form) {\n    throw new \\LogicException(sprintf('The selected node has an invalid form attribute (%s).', $formId));\n}\n```\n\n...checks if there is a form inside the **immediate** parent of the element. This is completely wrong, it needs to check in the entire document. As a consequence now even forms that would normally work, because they wrap around the fields that have the attribute, are broken unless they are the fields immediate parent (which is invalid anyway).\n\nThat's all I was able to deduce from just debugging the code in question. I'm unfamiliar with the interfaces to offer a fix, but essentially you want to change `$node->ownerDocument` to whatever offers a reference to the whole document.\n",
+      "@srcspider I don't see your point. `ownerDocument` is a reference to the whole document the given element is in, so it will search the whole document. (source: http://www.php.net/manual/en/class.domnode.php#domnode.props.ownerdocument)\n\nI also tried nesting the input elements into div tags both inside and outside the parent form but it worked for me.\n",
+      "For me while debugging the value of the `$textContent` property for the `ownerDocument` is not the entire document but only the immediate parent.\n",
+      "@srcspider Please provide a sample code which does not work for you.\n",
+      "ping @srcspider \n",
+      "@kepten I exclusively use goutte the behat driver so giving you the low level example is a little troublesome (as I don't use goutte directly, nor symphony).\n\nComposer:\n\n``` json\n{\n    require: {\n        symfony/dom-crawler: *,\n        symfony/css-selector: *,\n        fabpot/goutte: *\n    }\n}\n```\n\nBasic scaffolding:\n\n``` php\n<?php // tester\n\n\\error_reporting(-1);\n\\ini_set('display_errors', 1);\n\nrequire 'vendor/autoload.php';\n\nuse Symfony\\Component\\DomCrawler\\Crawler;\n\n$html = \\file_get_contents('usecase.html');\n$crawler = new Crawler($html);\n$form = $crawler->selectButton('test_1')->form();\n```\n\nException: \n\n```\nUncaught exception 'InvalidArgumentException' with message 'Current URI must be an absolute URL ().'\n```\n\nNot seeing [inconsistency with your docs](http://symfony.com/doc/current/components/dom_crawler.html#forms), reading 2.3 version. Please advise, or point me to a clean test case sample that I can use instead.\n",
+      "@srcspider you have got the exception because Crawler object needs a base URI.\nTry `$crawler = new Crawler($html, 'http://example.com');`\nThis should fix the exception but there was a flaw in the form attribute handling indeed which I fixed now in #8197.\n",
+      "@kepten\n\n> This should fix the exception but there was a flaw in the form attribute handling indeed which I fixed now in #8197.\n\nOkey, Thanks. Feel free to close the issue. I'll reopen if I encounter my issue again; right now it's hard to tell since I believe I just bypassed it in my tests.\n"
+    ]
+  },
+  "8214440": {
+    "comments": [
+      "I get the reasoning behind this but I'm :-1 on duplicating the validator error messages in forms. If someone doesn't like them he should just provide the correct/better ones at the same place he defined the validation.\n",
+      "I think a  better error message would look like\n**{{ field_label }} can not be null**\nor\n**you have to provide a\\an {{ field_label }}**\nbut this approach will require the use of two translation domains validators and messages\n",
+      "Also what about `error_bubbling = true` by default in form types?\n\n``` php\n<?php\n\nclass AwardParticipationFormType extends AbstractType\n{\n    public function buildForm(FormBuilderInterface $builder, array $options)\n    {\n        $builder\n            ->add('company', 'text', array(\n                'constraints' => array(new NotBlank()),\n                'error_bubbling' => true, // I should set this option to each(!) field for getting {{ form_errors(form) }} works fine\n                ))\n    }\n}\n```\n",
+      "@Koc Please don't do this BC break.\nBtw, I find the UX better when the errors are displayed near the invalid field instead of being all at the top\n",
+      "What about providing option for form type like `error_bubbling_children`?\n",
+      "Please do me the favor and stick to the topic. Other things can be discussed on the mailing list or in separate tickets.\n",
+      "@bschussek I'd be for better error messages as long as performance didn't suffer which I imagine it shouldn't. \n",
+      "+1 for better messages. \n",
+      "Hey @bschussek \nIf this is still of interest, then i'd like to have a crack.\nI'm looking to get involved in more code contributions, so any pointers to start with here?\n",
+      "@bschussek I'd like to have a go at this.\n\nAre you suggesting that in the form type (`Symfony\\Component\\Form\\Extension\\Core\\Type\\BirthdayType` for example), I should just set an `invalid_message` in the `setDefaultOptions` method?\n\n@stof do you have any suggestions for this?\n\nThanks\n",
+      "@mdavis1982 go for it, I believe you can propose a decent PR,\n@bschussek @stof will i think be open to this\n",
+      "A related issue is the fact we can only provide one invalid_message by form type. AFAIK, the invalid error message is used when a data transformer failed (throw a transformation failed exception). Am I right? If yes, then it would be very helpfull if we can provide a mapping between exception message & final error message displayed to the client or something else. Basically, I have faced this issue in a project where the customer would like to customize each different error messages for each error cases which are managed by the form type data transformer itself. For example he would like to get the minute value is invalid or the hour value is invalid but not the general the value is invalid.\n",
+      "@egeloen I think that's a separate issue, and one that would best be handled by the individual validators, rather than the core types themselves.\n",
+      "@mdavis1982 How would you customize/make a difference between each field error message (date/hour/minute) of a datetime type using date/hour/minute fields with the validator component as null is propagated in the model class & the validator component is run on this model? The validator can't know about this error because it has been detected by the data transformer early.\n\nIMO, it is definitively a related and separate issue :). I will open one later.\n",
+      "+1 for improved default form error messages. It seems to be a good idea.\n",
+      "so there was a PR for this and then it was closed, is it still valid?",
+      "Indeed, it seems there is not enough interest/feedback on this issue, same for a bunch of similar (old) ones.",
+      "Based on #14106, I've made #27142.",
+      "As I wrote in https://github.com/symfony/symfony/pull/27142#issuecomment-421545459 the new messages would be a BC break for everyone relying on the old ones for custom translations and for those languages where we cannot provide new translations (could be solved by generic translations though). To mitigate this we would need to introduce an option that would allow to opt into the improved messages. I am not sure if we want to do that."
+    ]
+  },
+  "7723266": {
+    "comments": [
+      "Is it rendered as a placeholder attribute in html? Otherwise it could create confusion as well, if you have a placeholder form attribute that doesnt use the html placeholder functionality. Whereas the required option uses the required attribute.\n",
+      "It is not, because select tags don't have that attribute. It's conceptually the same, so I doubt it will create a lot of confusion.\n",
+      "If the placeholder option uses the placeholder attribute for inputs that support it, like `<input type=text>` I'm fine.\n",
+      "That's the plan.\n",
+      "+1 as empty_data is a quite confusing name for this attribute.\n",
+      "@daFish it's `empty_value` currently ;)\n",
+      "@Tobion I'm fine with that. :)\n",
+      "And what about DateTimeType, DateType and TimeType? Same strategy as in ChoiceType?\n",
+      "@norzechowicz Yes, exactly\n"
+    ]
+  },
+  "6816718": {
+    "comments": [
+      "Can you provide more information on how to reproduce this?\nI cannot seem to break it in the way you mentioned\n",
+      "@Gladhon Could you please provide some feedback on this? A small sample of the text that you want to translate or a quick gist should be very helpful.\n\nThanks!\n",
+      "It seem's to five problems, if I do translation with variables. \n\n```\n{{ value.value|trans({}, Forms) }} \n{{ ('my.'~var) |trans({}, Forms) }} \n```\n",
+      "You can't extract anything from the above template as extractor doesn't run the code, so naturally this would be missing from translation anyway. JMSTranslationBundle solves this but you'll have to provide all the cases from php code.\n",
+      "It's okay, that's extractor don't can extraxt the translations above. But, it's would be nice if it's extract all translations that it can do and not abort with a Exception.\n",
+      "I tried to get this error by:\n-  adding `{{ (test~'test')|trans }}` in a template\n-  launching `./app/console translation:uodate SensioTestingBundle --dump-messages` command\n\nI tried different tags of the `2.1` branch but I cant get any error, my message is just ignored.\nThat said I already saw the error mentioned when making tests with `trans_default_domain` tag.\n\n@Gladhon The #7206 could hav solved your problem. Could you update and try again?\n",
+      "Ping @Gladhon \n\n```\nif (composer update solved your problem) {\n    please close the issue;\n} else {\n    do you have some precisions about it?\n}\n```\n\nThanks!\n",
+      "ping @Gladhon , i am also confirming this has been fixed in master, if your problem persists please reopen ticket\n"
+    ]
+  },
+  "6379747": {
+    "comments": [
+      "What about using `assets-base-urls`? http://symfony.com/doc/current/reference/configuration/framework.html#assets-base-urls\n",
+      "@willdurand the issue is that it will make all asset url absolute, even when not really needed. and it will make it more difficult for the dev setup, as each dev will have to change the config according to the base url he has locally. So this solution is not a perfect one either.\nBtw, I think this feature request is a duplicate (but I'm lazy searching the older one right now)\n",
+      "@stof Exactly, this is fundamental for many things.\n",
+      "For now, you can do : {{ app.request.getSchemeAndHttpHost ~ asset('images/foo.jpg') }}\n\nOne of the other duplicate issues : https://github.com/symfony/symfony/issues/3056\n",
+      "I have the same issue.\nThe problem is that you don't have to the request when sending email through a console command.\n\nI would have liked to avoid having a specific parameter in my config.yml just for this purpose (as it now works for url as in 2.1).\nAny other workaround ?\n",
+      "@stof You can set `assets-base-url` in your `config_prod.yml` only. Also it is not really required is not really an argument ;) Many use a separate domains for their assets anyway. I think it is a solution.\n",
+      "I'll take a stab at it\n",
+      "Or even:\n\n```\n{{ app.request.getUriForPath('') ~ asset('images/foo.jpg') }}\n```\n",
+      "Implemented in https://github.com/symfony/symfony/pull/10451\n",
+      "Hum ... Sorry for re-opening this old thread but this seems to get removed in https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Extension/AssetExtension.php#L54\r\nHow can I achieve this gracefully ?"
+    ]
+  },
+  "5827000": {
+    "comments": [
+      "eval ? WTF ?\n",
+      "eval is only insecure when used with user input, this is data coming directly from the controller and therefore eval can be used.\n\nWhat would your solution be then?\n",
+      "you can still get the parameter, remove the key you want, and then set it.\n",
+      "You mean in the controller? Sounds to me like a workaround, not a fix for the malfunctioning of the remove function.\n",
+      "and btw, the ParameterBag does not allow using an array in the getters either so I don't see why it should allow it in remove\n",
+      "Nah indeed, the get function is really neat, using a string as an array. You should be careful with eval, but in this case the programmer is responsible for using the functions and therefore eval would be a better solution in my opinion.\n\n```\npublic function get($key)\n{\n    if(is_array($key))\n    {\n        $c = '$this->parameters';\n\n        foreach($key as $k)\n        {\n            $c .= '[\\'' . $k . '\\']';\n        }\n        eval(return ($c););\n    }\n\n    return ($this->parameters[$key]);\n}\n```\n\nAlso, the get allows an indirect array which the remove does not. If you don't agree with me on the eval stuff, at least add that 'use a string as array crap' functionality to the remove too.\n",
+      "+1 for the ability to remove deeper elements, but strictly without eval. :)\nWe could implementing the same `foo[bar]` syntax as in the get method or maybe change to the `foo.bar` syntax which is nicer and easier to implement IMO?\n",
+      "We had this possibility in symfony1 and the implementation did not use eval.\n",
+      "I take this one. The exemple is only for array, but we can do the same with object, right ?\n",
+      "@hmonglee no, just arrays.\n",
+      "```\n$array = $bag->get('name');\nunset($array['name']['deeper']);\n\n$bag->set('name', $array);\n```\n\nThis will properly work as well.\n",
+      "@sstok That's why we did not implemented it in the first place.\n",
+      "Maybe optional parameter `$level` will be solution? \n\n``` php\n/*\n    Before \n    [common_mybundle_mytype] => array(\n        [media] => array(\n            [binaryContent] => null\n        ),\n        [title] => 'Message title',\n        [text] => 'Message text\n    )\n*/\n\n// remove($name, $level = 0);\n$bag->remove('media', 1);\n\n/*\n    After\n    [common_mybundle_mytype] => array(\n        [media] => array(\n            [binaryContent] => null\n        ),\n        [title] => 'Message title',\n        [text] => 'Message text\n    )\n*/\n```\n",
+      "@norzechowicz No. Because you could have several keys `media` at the level 1 (one for each top level key)\n",
+      "@stof right! \n",
+      "So maybe like in PropertyAccessor:\n\n``` php\n$bag->remove(common_mybundle_mytype['media']); //remove media\n$bag->remove(common_mybundle_mytype['text']); // remove text\n$bag->remove(common_mybundle_mytype['title']); // remove title\n$bag->remove(common_mybundle_mytype['media']['binaryContent']); // remove binaryContent\n```\n\nor without complex string parsing:\n\n``` php\n$bag->remove(array('common_mybundle_mytype' => 'media')); // remove media \n$bag->remove(array('common_mybundle_mytype' => array('title', 'text'))); // remove title and text\n$bag->remove(array('common_mybundle_mytype' => array('media' => 'binaryContent'))); // remove binaryContent\n\n```\n",
+      "What about adding new method returning references? Which would make this pretty straightforward and keep the class simple :\n\n``` php\n// PHP >=5.4\nunset($bag->grab('key')['sub_key']);\n\n// PHP 5.3\n$key = &$bag->grab('key');\nunset($key['sub_key']);\n```\n",
+      "@norzechowicz I'm for the second solution without parsing to keep it simple\n",
+      "@bamarni :-1:\n",
+      "@fabpot I provided a PR offering a deep-access api for the set/has/remove-methods that is exactly like that for the get method. And it is implemented without eval ;)\nIf that api is only wanted for remove (and not for has and set), I could of course shrink the PR.\nI can also provide a Doc PR, as soon as that is clear.\n",
+      "For the reasons explained in #7964, closing this issue as won't fix.\n"
+    ]
+  },
+  "5567424": {
+    "comments": [
+      "I know this is not a real solution, but the easy fix is to use varnish instead of the HttpCache, it'll be faster and does its own housekeeping. You should consider it if it's an option for you.\n",
+      "That said, a command to clean up old entries would be nice, so it can be ran out of band from the web workers.\n",
+      "You shouldn't store your dynamic cache on filesystem (except for dev).\n\nYou need an implementation of the [StoreInterface](https://github.com/symfony/symfony/blob/master/src/Symfony/Component/HttpKernel/HttpCache/StoreInterface.php) for a real cache engine (APC, Memcache ...)\n",
+      "The entire module is a ROR re-write... but @GromNaN, if you blindly accept the vary header, wouldn't the virtual storage (once your RAM is exhausted) fill up just as fast as the filesystem? \n",
+      "Creating a CLI tool to cleanup old entries might be a good idea but it won't do anything interesting for when you are using the validation model. So, we would need to come up with a strategy where we remove the oldest entries, not just the expired ones.\n\nFurthermore, this cannot be done in a regular Symfony command as the console application knows nothing about `HttpCache` (as it wraps the regular Kernel).\n\nSo, the best idea would be to create a new interface (`StoreHousekeepingInterface` or something similar) and let each `Store` class implement it.\n\nAnyone willing to investigate this further?\n",
+      "Take a look in the direction of a caching proxy on nginx and ssi. nginx makes automated cache validation. nginx caching faster than varnish, and places cache on disk. Tests: http://serverfault.com/questions/95679/nginx-varnish-esi-will-that-work\n",
+      "Generally about caching in highload\u00a0projects, I realized one thing - it is impossible to validate and generate a cache in the user's request. All these slow things are to be in the background. Better through queue ... Until this architecture - all will be very slow, at least sometimes.\n",
+      "Same problem here.\nI would like to add i had suspected the content-digest path generation as source of the fillup.\nSince we have a lot of changing content on the same url, this blew the cache.\n(so huge that the cache:clear couldnt terminate successfully)\n\nMy workaround here is rm -rf the cache regulary in low traffic times.\n\nVarnish would be the next step, then.\n",
+      "I'd create a PR on it, naming will be the difficult part ...\n",
+      "In case anyone else is still searching: https://github.com/Toflar/psr6-symfony-http-cache-store",
+      "closing as explained in #6855"
+    ]
+  },
+  "1887255": {
+    "comments": [
+      "@bschussek ping\n",
+      "Sounds good to me. I think the options array should be passed to all guess\\* methods.\n",
+      "I'm trying to work on this one.\n\nI did the changes for the Interface and the TypeGuess class, but the ValueGuess doesn't have $options, do I have to add it in the same way as TypeGuess ? \n\nIsn't it a problem for backward compatibility since to meet the same signature as TypeGuess, the __construct() of ValueGuess should have $options in second argument, so the actual $confidence argument will be placed third\n",
+      "I tried, but didn't fully understand the issue.\nIf someone else want to work on it, be my guest :)\n",
+      "I like to mention that fixing of this issue will introduce another one:\n\nMy feature of validation groups as callbacks was some time ago merged into core, the purpose is to calculate validation groups just after client data was bound to form, type guessers will be unable to guess anything if user has defined validation groups as callback/closure. So how should they behave, act as It has no groups defined?\n",
+      "As pointed by @canni, to be able to resolve the validation_groups (if callable), we need to have access to the form instance.\n\n@bschussek  What about this kind of signature ?\n\n``` php\n\nfunction guess*($class, $property, FormInterface $form = null);\n\n```\n\nWhich would permit to do\n\n``` php\n\npublic function guessRequired($class, $property, FormInterface $form = null)\n{\n    $guesser = $this;\n\n    return $this->guess($class, $property, function (Constraint $constraint) use ($guesser, $form) {\n        return $guesser->guessRequiredForConstraint($constraint, $form);\n    }, false);\n\n\n}\n\n\n    public function guessRequiredForConstraint(Constraint $constraint, FormInterface $form)\n    {\n        $groups = $form->getConfig()->getOption('validation_groups');\n        if (is_callable($groups)) {\n            $groups = $groups($form);\n        }\n        switch (get_class($constraint)) {\n            case 'Symfony\\Component\\Validator\\Constraints\\NotNull':\n            case 'Symfony\\Component\\Validator\\Constraints\\NotBlank':\n            case 'Symfony\\Component\\Validator\\Constraints\\True':\n                if (0 > count(array_intersect($constraint->groups, $groups)) {\n                    return new ValueGuess(true, Guess::HIGH_CONFIDENCE);\n                }\n        }\n\n        return null;\n    }\n\n```\n",
+      "EDIT: @bschussek we should pass a FormConfigBuilderInterface instead or something like that, cause we don't have a form instance yet.\n",
+      "I finally think it's not possible currently. It's impossible to access the form instance at this state,  because we guess types/required during FormBuilder creation.\n",
+      "We only have access to the FormConfig. We could pass this to the closure instead of the form. but it would be a BC break.\n",
+      "POC: https://github.com/docteurklein/symfony/compare/fix-2387\n",
+      "@bschussek another possibility would be to inject the form or data into the TypeGuesser during preSetData event, like here: https://github.com/KnpLabs/KnpRadBundle/blob/develop/Form/DefaultFormCreator.php#L50\n",
+      "@webmozart can you please comment on the proposed solutions in this issue?\n",
+      "Any news about this bug?\n",
+      "I'm closing this issue as duplicate of #7868. If this is fixed, it can only be fixed when the groups are passed explicitly, not via a callback.\n",
+      "@webmozart I don't understand why you closed, it's sound like won't fixed :disappointed: The field ignores the validation group defines to the form to determine if the field is required or not. It's not related to type of the field is null or not.\n",
+      "@b-durand No. The ticket should be fixed as part of #7868, since that ticket proposes to generally overhaul the guessers and so makes such an improvement possible. :)\n",
+      "Sorry for necroposting but this is still an issue in Symfony 3.4, correct?\r\n\r\nThanks!",
+      "@lukepass see #7868"
+    ]
+  },
+  "1184805": {
+    "comments": [
+      "Why not just reusing the Swiftmailer code, which is also based on the RFC:\n\nhttps://github.com/swiftmailer/swiftmailer/blob/master/lib/classes/Swift/Mime/Grammar.php\nhttps://github.com/swiftmailer/swiftmailer/blob/master/lib/classes/Swift/Validate.php\n",
+      "Well there are a boatload of RFCs, I don't know what's the status on Swift, but it should be easy to use a test suite on both to check. As for the why not?, well nobody ever mentioned it, that's mainly why, other than that I have nothing against it.\n",
+      "Hi, I'm the author of the is_email() function mentioned by Seldaek.\n\nThe first thing I'd say is to point out the email validation unit tests that are part of my is_email() project. Whatever solution you adopt for Symfony, it should give a correct result for all these tests according to the use cases you foresee for it.\n\nI'd be happy for is_email() to migrate to a class-based structure so long as it didn't lose accessibility for n00b developers. I've deliberately kept it as a single function to lower the barriers to adoption.\n\nI can see that a class plus a function that instantiates it would be the best of both worlds (for my project) and would allow Symfony to adopt the code easily. I'm not sure when I'd have time to do this myself at the moment, but I'd be willing to help anybody who wants to have a go.\n\nPlease don't implement anything that rejects valid email addresses - that's the biggest failing of every other validator I've tested.\n",
+      "@dominicsayers Hey, if you have some problems with time, I can give a try to refactor this function into an OOP version, even if Symfony2 dont adopt that function ;-)\n",
+      "Thanks @stloyd.\n\nThe latest code is here: https://github.com/dominicsayers/isemail\n\nFork away! I'll merge your changes back into the master branch so add any credits you want me to include.\n",
+      "any news about it ?\n",
+      "Anyone feels like cleaning things up if they need to be (ping @stloyd) in dominicsayers/isemail, and turning it into a composer package so that we can just depend on it from symfony and improve the validator?\n",
+      "Maybe we should propose to implement that functionality in php core for filter_var?\n",
+      "Yeah having it in filter_var would make sense too of course, but given that'd end up in PHP 5.5 at best, I would say it's still a good thing to have a decent userland implementation accessible.\n",
+      "Version for php core, would be awesome... but not sure someone will find time for translating this code to extension...\n\nAbout OOP version... It was started: https://github.com/stloyd/isemail but I didn't found time and it's kinda simple version, I will try to find some time for this, or if anyone want feel free to finish it, but just notice in this issue that =)\n",
+      "Hi @stloyd, @dominicsayers \nI'm playing around with this (https://github.com/egulias/isemail/tree/refactor-validator) . I've done some commits regarding coding style and moved the first case to a method to try to make it more readable and to allow further refactor. I've also added phpunit and travis in case we would like to plug it. Will this end in composer/Packagist?\n\nI'd like to know if i'm going in the right direction and if it is what you where thinking.\n\nBtw, the file is in DOS format, can I change it to Unix? \n\nOne more thing: the is no namespace. Should I add one?\n\nThanks!\n",
+      "@egulias Awesome, looking forward to this! :)\n",
+      "Status update:\nNamespaces and unix transformation has been done. I'm not sure if EmailValidator is the right but at least we now have one.\nOnly 3 more cases remain to be moved to methods. I've identified some lines that can be converted into methods (some special checks) and thus remove some lines.\nAfter that I'll try to refactor as many if statements as possible, there are plenty of them!\n",
+      "Ok this has been done: all of the case statements are in self contained methods.\n\nAfter reading through the code I've realized that there is **no more error checking if errors in the first if/elseif/else block**\nIf we pass the first block (lines 247 to 503 from my fork, branch refactor-validator) with errors, there are no more error checking. \nWe can save a lot of complexity and lines if we throw exceptions (\\InvalidArgumentException). We can do this even from inside the switch.\n\nUsing \\InvalidArgumentException lead us to use the exception string to store the error code. \nHow about defining \n\n``` php\nclass InvalidEmailException extends \\InvalidArgumentException\n{\n    private errorCode;\n    public function getErrorCode()\n}\n```\n\nI think we can also define\n\n``` php\nfinal class EmailErrorCode\n{\n    const DNSWARN = 7;\n    const RFC5321 = 15;\n    const CFWS = 31;\n    //...\n}\n```\n\nSo I would like to know if throwing exceptions all around is ok with @dominicsayers constraint. This will also break almost every test and probably Dominic test suit too.\n\nAdvice and comments from the rest of you would be highly appreciated \n\nEduardo.\n",
+      "If you want to know how to elegantly put a EBNF into object oriented code, I suggest you to look at Doctrine's [lexer](https://github.com/doctrine/common/blob/master/lib/Doctrine/Common/Annotations/DocLexer.php) and [parser](https://github.com/doctrine/common/blob/master/lib/Doctrine/Common/Annotations/DocParser.php) implementation. Implementing a lexer/parser should help you to eliminate all those giant switch statements.\n",
+      "Another place to look at is @schmittjoh's [parser-lib](https://github.com/schmittjoh/parser-lib) which provides base classes for lexers and parsers\n",
+      "Thank's! I'll go the lexer/parser way.\n",
+      "Hi there!!\nIt's been a while but I've managed to have a lexer/parser implementation of this [here](https://github.com/egulias/isemail).\nI used @schmittjoh parser-lib since it's more stand alone; however I had to make a simple [PR](https://github.com/schmittjoh/parser-lib/pull/2) for a visibility change. If this is finally integrated into Symfony I think it would be easy to change the abstract classes form where I have extended to use Doctrine's.\nThat being said, of course tests are faling... yes we have travis ci integration :). \nApart from that the implemented tests are only for simple valid and invalid emails. The rest of the tests should be passed and implemented again since some things have changed (errors are now exceptions, and they still need to be passed to constants).\nI have made a branch 'before-refactor' which holds the state of @stloyd repo. Master is now where things will be merged and I've deleted the old tests, the examples inside the extra folder and the is_email function file.\n\nThere is still work to be done (I'll be putting them into issues):\n- Complexity of the parser is at 93 and most of methods have still a lots of ifs\n- The tests need to be completed and get the coverage report to see what is no being tested, test it and fix things\n- I need some examples of valid/invalid TLD domains for emails, since it's not being test in the old tests\n- Error constants need to be created\n- Warnings constants need to be standardized and reviewed\n- I think I've mixed some concepts, but those error will be discovered with testing :)\n\nAs always I would appreciate your comments about the implementation and code errors. \n\nAnd... Happy New Year!\n",
+      "The validator could be injected into the constraint, then fallback to default if not specified. eg:\n\n``` php\narray('validator' => new Zend_Validate_EmailAddress())\n```\n\nWhere the validator would be a proper class or closure. Of course the above would not work out of the box, it would have to be wrapped in an adapter class or contained in an anonymous function.\n",
+      "Update:\nSolved the visibility with a change to use a regex, thanks to @schmittjoh . \nI'm currently solving failing tests regarding warnings for valid emails, there are 6 to go.\nWhich are the plans once the tests pass? Will this be integrated @bschussek @stof @Seldaek (thus needing to make it a symfony validator)?\n\n@Gator92 this is currently working as a lib (in https://github.com/egulias/isemail). It's not yet in Packagist but you can add it with composer or git submodule. How would this integrate in ZF2?\n",
+      "Test are green (https://travis-ci.org/egulias/isemail). I still want to clean up a bit (there is a mess with constants), but validation is as it were before :)\n",
+      "I've been doing some performance tests on @egulias library and right now validation is about 10-12 times slower than filter_var. \n\nYou can see them at https://github.com/egulias/isemail/blob/master/tests/IsEmail/Performance/AgainstFilterVar.php\n\nWould this be acceptable to get accepted in Validator component? I think performance can be improved but a super-boost is quite unlikely to be achieved. On the other hand, e-mail validation would be proper.\n\nAnother thing that comes to my mind (and to be honest I'm not sure about it) is domains with letters like \u00f1. They are accepted, RFC8222 does not cover them, but I don't know if mail servers accept it.\n\nShould Validator be strict to RFC8222 or to currently valid e-mails?\n\nWaiting for your comments... Ping @schmittjoh @stof @bschussek @Seldaek \n",
+      "Most email servers require the RCPT TO command in ascii. so I'd suggest to convert the domain part into punny code before validating.\nNow the intl extension does have the utf8 to punny code function but not every shared hosting has that enabled so I guess the function should be provided in php in such case.\n",
+      "@egulias You'd want to make a new custom constraint then use whatever internal logic, class or  imported library to perform the validation. This is what you'd probably want to do it the default Symfony constraint does not meet your needs.\n",
+      "I see this has been marked as enhancement too. \nShould I continue to improve the code? Should I convert it to a symfony validator in the symfony repo and PR?\n@schmittjoh @stof @bschussek @bschussek which are the following steps? or this is not going forward? \n\nThanks!\n",
+      "ping @Seldaek \n",
+      "@egulias IMO 10x slower for validating emails correctly vs creating false negatives is definitely worth it. Emails aren't validated so often in performance critical paths. I would say yes it should be a validator and yes submit a PR and then we can talk more there.\n",
+      "Thanks for the reply @Seldaek . I'll start this week.\n",
+      "Hi @egulias, thank you for the tremendous work you've been doing! Sorry for the slow feedback, there's a pile of issues waiting to be worked on :) I agree with @Seldaek on the performance question.\n\nHave you tried running your refactoring against the original test suite? (by wrapping it into `is_email()`)\n",
+      "Hi @bschussek , thanks you for taking the time. I initially didn't but did it after your comment. I'll upload the test code to github this week. The numbers I get show that `is_email` is around 0.2 seconds slower for 10k loops against instantiation for every email. For only one instantiation is 0.5 seconds slower. So basically the refactor is a bit faster.\nBy the way, I opened an RFC #8395 in Symfony about the [EmailValidator](https://github.com/egulias/EmailValidator) in which my work has derived.\nLet me know your thoughts.\n"
+    ]
+  },
+  "19047724": { "comments": [] },
+  "17502295": { "comments": ["Duplicate of #7078.\n"] },
+  "14401746": { "comments": [] },
+  "14273793": {
+    "comments": [
+      "There is 2 places where service ids are converted to PHP method names:\n- In the PHP dumper, using [Container::camelize](https://github.com/symfony/symfony/blob/v2.3.2/src/Symfony/Component/DependencyInjection/Container.php#L514-L517) to generate the method\n- In the container itself, to resolve the method when [getting a service](https://github.com/symfony/symfony/blob/v2.3.2/src/Symfony/Component/DependencyInjection/Container.php#L277);\n\nThey must be compatible.\n"
+    ]
+  },
+  "14259080": {
+    "comments": [
+      "Not sure it makes sense for us. We do know all our sub-namespaces, so we know when there can be ambiguities. Any issues with our current definitions?\n",
+      "It matters a lot, but I submitted this without checking this particular project: it seems the `composer.json` for all components etc in symfony do have a trailing `\\\\` already, so someone already recognised the problem and fixed. \n\nHowever, not all bundles external to symfony/symfony have it. For example, SwiftMailerBundle, AsseticBundle and the Sensio bundles.\n",
+      "FYI, it was made in PR #5627.\n"
+    ]
+  },
+  "13998113": {
+    "comments": [
+      "@Sirian the first case is not reproducible, the second is and that is what this failed test ^^ above is for.\n",
+      "@Sirian i think this awaits a big refactor on this case. I put up the failing test however i am seeing the logic here a bit horrendous to work on https://github.com/symfony/symfony/blame/master/src/Symfony/Component/Console/Application.php without refactoring the whole find and findNamespaces methods.\n\nso i think this gets closed as the issue is really on the understanding on which is the namespace and subnamespaces and command name and how to work with them or to refactor the whole thing.  /cc @fabpot \n",
+      "fixed by #8800\n"
+    ]
+  },
+  "13963217": { "comments": [] },
+  "13435189": { "comments": [] },
+  "13254373": {
+    "comments": ["Having a `getConnection()` method seems fine to me.\n"]
+  },
+  "13116635": { "comments": [] },
+  "13111578": {
+    "comments": [
+      "trying this one @bschussek \n",
+      "Wow, that's quick! Way to go :) :+1: \n",
+      "@bschussek heh, ckeck it out;)\n"
+    ]
+  },
+  "12950953": {
+    "comments": [
+      "This are not query string parameters. The hash will never be sent to a server. Its client-side only. Im not sure if any generic solution will do here. But You could store the hash yourself by sending some ajax request and then extract it server side. \n",
+      "As @defrag said, this is the hash that the server does not know about. So symfony cannot do anything here.\nSome browsers AFAIK also leave the hash in place when a redirect happens.\n"
+    ]
+  },
+  "12900121": {
+    "comments": [
+      "`:80` is not part of the hostname.\n",
+      "Nope, agreed, but there's currently no way to specify it so I tried that and thought I'd note the behaviour.\n",
+      "That's not supported at the moment and I'm not sure we want to support that anyway. The hostname feature is there to be able to manage sub-domains which are mostly always using the same port. So, I'm closing it for now.\n",
+      "I sometimes use port-based hosting in testing, especially with mobile devices. \n\nAt the moment, I am using a hack in web/app.php and web/app_dev.php (I put it before the bootstrap line, definitely before the kernel boot):\n\n```\nif (!empty($_SERVER['FORCE_HTTP_HOST'])) {\n    $_SERVER['HTTP_HOST'] = $_SERVER['FORCE_HTTP_HOST'];\n}\n```\n\nThen in the Apache vhost:\n\n```\nSetEnv FORCE_HTTP_HOST foo.my-domain\n```\n\n(yes, it means a separate vhost for each site; if your vhost is complex you could use an include).\n\nI don't like putting things in app.php though, it could quickly become unmaintainable. Digging around in the code, I found it difficult to see where Symfony parses the host variables (is it even in the Guzzle code?) Maybe Symfony could provide a way to have a hostname map of some kind, or make this logic easier to extend?\n",
+      "I'm using the router to generate URLs to other websites whose host depends on my environment. Problem is, my project runs in a docker container so it is accessible through a specific port. That port is then appended to every of these websites host, which is wrong.\r\n\r\n@fabpot would you reconsider this?",
+      "@MatTheCat if you generate URLs for another site, you should probably use a separate router instance, with its own RoutingContext which would *not* be configured based on the current request.",
+      "Thanks @stof \r\n\r\nAs I must generate URLs for many sites I guess it means I have to create as many `RequestContext` and `Router` as well as a manager to allow selecting the right router easily and a Twig extension? Seems a bit heavy :confused:",
+      "It seems to me adding the port to the route would be simpler than what @stof described. @fabpot could I open a PR? ",
+      "@MatTheCat you might manage to have a single router for all your external websites if they all run on default ports (using the host requirement to switch the host, as you currently does).\r\n\r\nPutting all the route definitions for external sites in your main router will make them part of the URL matcher too. This is not a good solution for performance, especially if you have lots of external routes.",
+      "@stof sadly when running on local the port could be anything. That would mean as many routers than external websites. But if I only need to generate URLs wouldn't UrlGenerators be enough? ",
+      "One solution might be to exclude routes without a controller from URL matcher.\r\nSo you will have 2 submodules in router that work independent from each other.\r\nThis way the matcher will be light and fast, while the generator will be able to make both internal and external routes."
+    ]
+  },
+  "12873934": { "comments": [] },
+  "12834613": { "comments": [] },
+  "12728018": { "comments": [] },
+  "12664314": {
+    "comments": [
+      "I think this is the result of this commit: https://github.com/symfony/symfony/commit/163564b00905046faf0fe643665729cc43be0f24\n",
+      "Yes, you're probably right.\n"
+    ]
+  },
+  "12508458": { "comments": [] },
+  "12211096": {
+    "comments": [
+      "Why should heading `.` or `_` be replaced with something? With what?\n",
+      "Camelize will remove all _  except the first one, in my opinion it should remove all the _ without any exceptions.\n\n``` php\nphp > echo camelize('_test_test2') . \\n;\n_testTest2\n```\n\nAbout the . it is replaced with _ in all positions except in the first position that is not replaced, eg:\n\n``` php\nphp > echo camelize('test.test2') . \\n;\nTest_Test2\nphp > echo camelize('.testtest2') . \\n;\n.testtest2\n```\n\nKeeping the first . doesn't make a lot of sense to me, why that exception? For sure a lot of people use camelize to invoke methods dynamic, and a method with . as start is invalid, but that is not the main point.\n\nThe main point is that I don't see why a camelize that remove all the _ and switch all . into _ have exceptions to first chars. If that behavior will be kept at least the PHPdoc of the method should be clear about that.\n",
+      "Guys, I just found this issue using symfony/symfony 2.2.x-dev with commit 3c44d487f2ca7c7237b7a5bb2fa98922d96d7478 and PHP5.4.13.\n\nOn `composer.phar install`:\n\n```\nGenerating autoload files\nPHP Parse error:  syntax error, unexpected '('/(^|_|\\.)+(.)/', fu' in .../vendor/symfony/symfony/src/Symfony/Component/DependencyInjection/Container.php on line 489\nScript Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap handling the post-install-cmd event terminated with an exception\n\n  [RuntimeException]                                     \n  An error occurred when generating the bootstrap file.\n```\n",
+      "@fabpot can you give your input on this? I'd like to solve the issue but I need some rules for how this should work. Thanks :)\n"
+    ]
+  },
+  "11853585": {
+    "comments": [
+      "Can you please try to use `$url = $router->generate('anf_word_scrabble_widget', array('domain' => $domain), UrlGeneratorInterface::ABSOLUTE_URL);` and see if that works? Because currently it generates a network path (domain does not match) and the client might not be able to request that.\n",
+      "thanks @Tobion \nit solves the problem :+1: \n",
+      "I reopen this ticket because the browserkit client should be fixed to handle network paths. I've changed the title of this ticket.\n",
+      "fixed by #7179\n"
+    ]
+  },
+  "11684078": {
+    "comments": [
+      "@igorw blank values are not valid in Yaml 1.2\n",
+      "Please point me to where this is mentioned. Unless I'm misunderstanding the spec, it should be allowed.\n\n[7.2. Empty Nodes](http://www.yaml.org/spec/1.2/spec.html#id2786563) states that:\n\n```\n{\n  ? foo :\u00b0,\n  \u00b0: bar,\n}\n```\n\nShould resolve to:\n\n```\n%YAML 1.2\n---\n!!map {\n  ? !!str foo : !!null ,\n  ? !!null    : !!str bar,\n}\n```\n\nWhere `\u00b0` is an empty value.\n",
+      "hmm, right.\n\nBtw, the inline parser is inconsistent as it parses it as a string: https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Yaml/Inline.php#L47\n",
+      "working on it\n"
+    ]
+  },
+  "11611544": {
+    "comments": [
+      "What result would you expect of the `__toString` method ?\n\nDepending on what is expected, the method could be added to the parent class `Symfony\\Component\\Console\\Input\\Input`.\n",
+      "I'm on it, trying to make something reversible (i.e. you can pass toString back into a StringInput and things work as expected.\n"
+    ]
+  },
+  "11600112": {
+    "comments": [
+      "Why would you need to access this service ? You can use the `templating` service (which will be the DelegatingEngine when you enable several templating engine or the only engine you have when a single one is enabled)\n",
+      "because addGlobals (and many other methods) aren't available on the delegating engine nor can i grab the php engine directly because getEngine is protected.\n",
+      "If you want to add some globals, you should use a compiler pass to add a method call on the service definition instead of getting the service somewhere during the boot process or the kernel events. This way, this keeps the service lazy-loaded and ensures that your global is always set when using the service.\n",
+      "i saw that the twig engine was available as a public service, so i suggested the same for the php engine. is there a reason for that?\n",
+      "perhaps the real problem is that the constructor of the PHPEngine should be more flexible and not just force a single global.  I wonder if there are any other folks who are interested in the phpengine who have any ideas on that? It seems to be somewhat illmaintained comparatively.\n",
+      "oh BTW.. i cannot simply set globals at compile time, some of them are based on the request. So a compiler pass will not solve (all) my problems.\n",
+      "Moving `DelegatingEngine::getEngine()` to public seems reasonable to me.\n"
+    ]
+  },
+  "11511248": {
+    "comments": [
+      "@craue the enableable configs have a higher level of integration in 2.2 which probably explains why it works better there.\n",
+      "and actually\n\n```\nframework:\n  csrf_protection: false\n```\n\nwill unset the node\n",
+      "The bug is [in the extension](https://github.com/symfony/symfony/blob/2.1/src/Symfony/Bundle/FrameworkBundle/DependencyInjection/FrameworkExtension.php#L158) as the csrf config is loaded whether csrf is enabled or not. It should not be.\n\nSetting csrf_protection to plain false will unset the node and then no file is loaded (but the parameter is not set - which should IMO also be changed).\n",
+      "@fabpot we must fix this for 2.1?\n",
+      "yes it should.\n",
+      "@vicb ok, then I get it.\n",
+      "Thanks, you should be able to find all the required details above. You can ping me when you submit the PR if you need a code review.\n",
+      "@vicb First time contributor, a glance over PR #7888 would be much appreciated if you're still available. Thanks.\n",
+      "As 2.0 and even 2.1 are unmaintained now, I guess a fix won't be merged anyway and thus this issue can be closed.\n"
+    ]
+  },
+  "11507972": { "comments": [] },
+  "11338172": {
+    "comments": [
+      "This is what I have to do in my app as a workaround:\n\n``` php\nif (isset(getallheaders()['Authorization'])) {\n    $request->headers->set('Authorization', getallheaders()['Authorization']);\n}\n```\n",
+      "I am taking care of this one.\n",
+      "Great! Let me know if I can help.\n",
+      "Looking into the code, I'm not sure how to implement this the best way. The `$_SERVER` variable is read in the `Request::createFromGlobals`. My first idea was to look if `apache_request_headers` was available and then pass this instead of the `$_SERVER` array.\n\nBut as `$_SERVER` includes much more keys in a different format, I'm a bit lost. I thought about merging the two and then modifying the `ServerBag->getHeaders()` method to look for both formats, but I'm not sure about it.\n",
+      "I'm not sure about this either, but it looks good to me.\n",
+      "Looks like the same as #3551, no?\n",
+      "Closing in favor of a documentation update: see symfony/symfony-docs#2529\n",
+      "@fabpot Hmm, I don't think this solves my problem. I'm _not_ running php-cgi, yet my Authorization headers are still stripped.\n",
+      "@julien-c same problem here, see https://github.com/symfony/symfony/issues/19693. Have you ever found a solution?\n",
+      "@andig Nope. Not very helpful, but I've switched to a better stack now :)\n",
+      "In my case I had to add to virtual machine config in Apache:\r\n`SetEnvIf Authorization (.*) HTTP_AUTHORIZATION=$1`\r\nAfter this **HTTP_AUTHORIZATION** appeared in **$_SERVER** (with value _Bearer Xxxx_).\r\nNow I can get it's value from **$request->headers->get('Authorization')**"
+    ]
+  },
+  "11337837": {
+    "comments": [
+      "The DomCrawler component does not support scheme relative urls. It should be added before https://github.com/symfony/symfony/blob/master/src/Symfony/Component/DomCrawler/Link.php#L123 (checking for `//` at the beginning.\n"
+    ]
+  },
+  "11203908": {
+    "comments": [
+      "AFAIK, checkboxes are not submitted when not selected. So the form only checks whether it checkbox name is in the request (basically doing `isset()`).\n",
+      "That's true. My issue is about binding the form to initial data (domain object) when displaying it, not after submit.\n\nI'll give a wider example:\n\n``` php\n$initial_values = array(\n    'name' => 'Ville',\n    'active' => false\n);\n$formBuilder = $this->createFormBuilder();\n$formBuilder->add('name','text');\n$formBuilder->add('active','checkbox');\n$form = $formBuilder->getForm();\n\n$form->bind($initial_values);\n$templateParameters = array('form' => $form->createView());\n// Then rendering the template\n```\n\nTWIG Template:\n\n``` twig\nName: {{ form_widget(form.name) }}\nIs active: {{ form_widget(form.active) }}\n```\n\nOutcomes:\n- Name-field rendered with value Ville\n- Active-checkbox is checked, even active=false in initial values\n",
+      "Yeah this is surely unexpected.\n",
+      "`bind()` binds data to the form, transforms and validates it. `setData()` should be used to populate the form with defaults.\n\nHowever, I can think of scenarios where binding values which not necessarily come from a http request is useful. I think we should support bot `false` and `null`.\n",
+      "True, you should use setData for that.\n",
+      "@jakzal if your input is not behaving in the same way than a browser (set/not set) but sendign a boolean, don't use the checkbox type.\n",
+      "Anyway, closing this as the issue is a misuse.\n",
+      "@stof ok thanks for your comment.\n\nFor the convenience and ease of use, I would prefer an option for checkbox type to allow also `false` to be interpreted as not set. I bet checkbox type is very frequently misused exactly for this kind of use cases.\n",
+      "@vmattila IMO, it does not make sense, as it would not behave like a checkbox anymore. As the binding behavior would be totally different, it should be a different type.\n",
+      "I agree with @jakzal, on the good should be to support `false` and `null` values. It maybe useful when the request contains content from json data (currently this is can be solved through event listeners).\n",
+      "@yethee I kind of changed my mind and agree with @stof now ;) It's not a BooleanType but a CheckboxType.\n",
+      "But then we can not use the one instance of a form in the context of RESTful. We will need to add an additional logic to build the form or have different forms for `application/x-www-form-urlencoded`, `application/json`, etc.\n",
+      "@yethee you can as soon as you implement BooleanType which would treat both `false` and `null` as `false`.\n",
+      "I agree that binding `false` should mark the checkbox as unset (for REST requests). There is no situation when `false` will be bound for normal forms anyway. Reopening.\n",
+      "@bschussek IIRC, this was done this way before 2.0 being stable, and you were the one changing it.\n",
+      "Yes, although the reason was empty strings. When a checkbox has the value `` and is clicked, you want it to remain clicked. Through a normal form, you will never receive the value `false`, since all values coming from the request are strings.\n",
+      "Thanks for your comments in general. I would be happy to contribute with this change (to make `false` considered as an unchecked value in CheckboxType)\n\nDo you think we should enable this `false` behavior by default or based on an option? Or vice versa, disabling the behavior with an option?\n",
+      "It should be enabled by default. We will add it to 2.3, as this is a behavior change and 2.2 is already feature frozen.\n",
+      "Since #7789 was merged, this issue can be closed.\n",
+      "Can we re-open the issue ? The unit test in pr #7789 does not reflect the real word. I added some tests: https://github.com/lyrixx/symfony-standard/blob/sf-debug-form-false/src/Acme/DemoBundle/Tests/Controller/DebugControllerTest.php#L37-L77 ; I used guzzle and buzz.\n\nResults:\n\n```\n1) Acme\\DemoBundle\\Tests\\Controller\\DebugControllerTest::testFormWithHttpTransportWithBuzz with data set #1 ('no', false)\nFailed asserting that two strings are identical.\n--- Expected\n+++ Actual\n@@ @@\n-no\n+yes\n\n2) Acme\\DemoBundle\\Tests\\Controller\\DebugControllerTest::testFormWithHttpTransportWithGuzzle with data set #1 ('no', false)\nFailed asserting that two strings are identical.\n--- Expected\n+++ Actual\n@@ @@\n-no\n+yes\n\n```\n\nSo I dig a little: when you submit `false` with Guzzle: `$_POST['value'] === ''` and with buzz:  `$_POST['value'] === '0'`. BTW, I use nginx 1.2.6 and php 5.4.16.\n\nping @bschussek \n",
+      "@lyrixx the only way to submit `false` as a boolean is to send the data as json. form-url-encoded data can only submit strings, and an unchecked checkbox is omitted when encoding as form-url, not submitted as an empty string. So the issue is with your test, not with the implementation.\n",
+      "Or we can add another data-transformer to checkbox that convert `'0'` or `''` to `false` ?\n",
+      "@lyrixx This would be wrong. `0` and `''` are valid choices for a choice type. Your suggestion would make it impossible to select them in an expanded choice field\n",
+      "@stof is right. The only way to submit `false` to a checkbox is by using some protocol that supports this datatype (JSON, XML, ...). CGI supports strings only, so there is no way to support submitting an unchecked checkbox with this protocol than what we have now.\n",
+      "Yes, you are all right.\n\nBut can we provide a small data transformer: `BooleanToStringTransformerABitSpecial` ;) to could do the job.\nOf course this data transformer will not be actived by default. It will be the developer responsibility to enable it for only one element. This could be documented in a cookbook entry.\n"
+    ]
+  },
+  "11110070": {
+    "comments": [
+      "The fix is going to be released in: 5.4.12 / 5.3.22 / 5.5.0, lower versions of 5.4 and 5.3 are affected and need this workaround.\n",
+      "@Seldaek ok for you like that ?\n",
+      "Looks good yes.\n",
+      "@PierreJoye it seems that PHP builds with `--enable-maintainer-zts` are also affected by this on linux, and even on 5.4.12 it still is present. @loicfrering just helped debug this on travis (where they added this configure flag recently). Seems like https://bugs.php.net/bug.php?id=50524 is related.\n\nIs there an easy way to detect ZTS builds? That way we could enable this fix for ZTS builds only. Or maybe we should revert to always doing:\n\n```\nif (null === $this->cwd) {\n    $this->cwd = getcwd() ?: null;\n}\n```\n",
+      "yes, there is a constant for that, ZEND_THREAD_SAFE\n\nOn Sun, Mar 10, 2013 at 6:58 PM, Jordi Boggiano notifications@github.comwrote:\n\n> @PierreJoye https://github.com/PierreJoye it seems that PHP builds with\n> --enable-maintainer-zts are also affected by this on linux, and even on\n> 5.4.12 it still is present. @loicfrering https://github.com/loicfreringjust helped debug this on travis (where they added this configure flag\n> recently). Seems like https://bugs.php.net/bug.php?id=50524 is related.\n> \n> Is there an easy way to detect ZTS builds? That way we could enable this\n> fix for ZTS builds only. Or maybe we should revert to always doing:\n> \n> if (null === $this->cwd) {\n>     $this->cwd = getcwd() ?: null;\n> }\n> \n> \u2014\n> Reply to this email directly or view it on GitHubhttps://github.com/symfony/symfony/issues/7106#issuecomment-14685623\n> .\n\n## \n\nPierre\n\n@pierrejoye | http://blog.thepimp.net | http://www.libgd.org\n",
+      "@lizjulien could you update your PR to enable this workaround for any php that has ZEND_THREAD_SAFE for now? Because it seems it's still not fixed in 5.4.12 on linux at least (haven't checked windows).\n",
+      "@Seldaek Sure, i'll do that. But just to be sure, we remove all check for version and we replace it by a constant check?\n",
+      "I think it's the only option until we can test for sure that it is fixed in a given version.\n",
+      "ok\n"
+    ]
+  },
+  "11023512": {
+    "comments": [
+      "@extesy could you provide a failing test or an example code revealing the issue? Technically [files should be automatically removed](http://php.net/manual/en/function.tmpfile.php) when `fclose()` is called or script finishes.\n",
+      "@jakzal It's quite hard to isolate the small repro case, but here's what I think is going on:\n1. Task runner process (the one which spawns worker processes) is always running, so it won't remove temp files because of script finishes condition.\n2. The only two places where fileHandles are closed are `stop` function which I don't use, and `processFileHandles` which has its `$closeEmptyHandles` parameter always set to false so it doesn't close handles either.\n",
+      "Actually, `processFileHandles` is not even being called. I pass `$stdin=null` to Process constructor and this code does an early return from the `start` function:\n\n``` php\n        if (null === $this->stdin) {\n            fclose($this->pipes[0]);\n            unset($this->pipes[0]);\n\n            return;\n        }\n```\n\nSo `fclose` on fileHandles is not even called anywhere in the code path.\n",
+      "@extesy what are the exit statuses of these worker processes?\n",
+      "@romainneutron Can you have a look at this?\n",
+      "@extesy @mirkin Can you provide a test script that reproduce the issue systematically ?\n\nI do not have Windows OS. I tried to reproduce your issue by using file handles explicitely without success, temporary files are removed on process destruction. \n",
+      "Ok, I'll try to repro it with a test script.\n"
+    ]
+  },
+  "10704019": { "comments": [] },
+  "10605836": {
+    "comments": [
+      "Can you submit a pull request with a fix and some unit tests?\n",
+      "According to the [specification](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35.1) we're also not handling the `$start` properly. \n\nFor example: `bytes=-500` should return the final 500 bytes (and not 0-500 bytes).\n\nThis is something I could help with once I'm finished with my other task.\n",
+      "I think we have another bug here. The [test expects]((https://github.com/symfony/symfony/blob/master/src/Symfony/Component/HttpFoundation/Tests/BinaryFileResponseTest.php#L62) to get 3 bytes back for a range 1-4:\n\n``` php\n$request->headers->set('Range', 'bytes=1-4');\n\n$this->expectOutputString('IF8');\n```\n\n[rfc2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35.1) says that the byte positions are inclusive. That means we should rather get 4 bytes back for 1-4 range.\n",
+      "Can this be closed now? See the merge above.\n"
+    ]
+  },
+  "10546193": {
+    "comments": [
+      "Hi, what version of Symfony2 are you using?\n",
+      "The issue occurred in 2.1.7 and is still there after upgrading to 2.2.0-BETA2.\n",
+      "Ok, thanks, I'll give it a shot today and see if I can fix it.\n",
+      "Hi.\n\nSorry for delay.\nI've created the following [gist](https://gist.github.com/dlsniper/4726085) but I've yet to encounter the problem.\nAm I doing something wrong?\n",
+      "That looks the way, we have templates.\n\nYou don't get `Symfony - Welcome` dumped as key under domain `messages`, but only in the domain `users`?\n",
+      "@havvg actually the `app/console translation:update --dump-messages --force en AcmeDemoBundle` command will dump only `messages.en.__format__`.\n\n```\nGenerating en translation files for AcmeDemoBundle\nParsing templates\nLoading translation files\n\nDisplaying messages for domain messages:\n\n'Symfony - Welcome': '__Symfony - Welcome'\nembed: __embed\n```\n\nI'm using Symfony2 2.1.7 as well.\n",
+      "When I run `php app/console translation:update de_DE OrmigoBundle --dump-messages`, I got this result:\n\n```\nGenerating de_DE translation files for OrmigoBundle\nParsing templates\nLoading translation files\n\nDisplaying messages for domain messages:\n\nsettings.header: __settings.header\naccount.my_account: __account.my_account\naccount.settings: __account.settings\n[ ... ]\n\nDisplaying messages for domain account:\n\nsettings.header: Einstellungen\n[ ... ]\n\nDisplaying messages for domain breadcrumb:\n\nhome: Ormigo\naccount.my_account: 'Mein Konto'\naccount.settings: Einstellungen\n\n[ ... ]\n```\n\nAdding the `--force` option will write all those into the output format (PDO), including the wrong/duplicate ones.\nMaybe, there is something different, that's causing the issue, so I put up this gist with more details on the templates: https://gist.github.com/havvg/3a779bf221e09acb181e\n",
+      "Ah, so you **only** got it in `messages`? That would be wrong, too.\nI guess, I got the correct ones, because some of them are already present (translated) in their correct domain.\n",
+      "@havvg the problem is that `TwigExtractor` seems not to take `trans_default_domain` in account.\nI'll try to fix it today.\n"
+    ]
+  },
+  "10533801": {
+    "comments": [
+      "I'll pick it up. @vicb I guess it should be done in 2.1?\n",
+      "master (as not a bug fix)\n",
+      "thanks... but please wait one day, I am fixing them before :)\n",
+      "well will be for next beginning of next week, pending a reply for fabpot. Feel free to go ahead before if you wish.\n"
+    ]
+  },
+  "9837048": {
+    "comments": [
+      "@md81 Are you updating the managed entity or a new instance in your edit action ?\n",
+      "In update action, I use managed entity, like this:\n$editForm   = $this->createForm($formType, $entity);\n",
+      "Hmm, I often have the same problem, but at this moment I can't find any code to paste.\n",
+      "Does anyone know how to fix it?\n",
+      "I've found clue.\n\nProblem exists only in case with cascade validation.\n\nwhen I use in EditType:\n$builder\n            ->add('email', 'email')\n\nvalidation is ok, \nbut problem is when I use:\n$builder\n            ->add('userEdit', new UserEditType(), array(\n                'validation_groups'=>array('edit', 'company'),\n            ))\n\nwhere UserEditType contain: \n$builder\n            ->add('email', 'email')\n",
+      "The problem also exists when you use a different EntityManager in constraint :\n`@UniqueEntity(fields=name, em=my_custom_em)`.\n",
+      "i have this issue with FOSUserBundle's ProfileFormType. i am using non-default entity manager and it gives me same results while editing/updating.\n",
+      "the problem seems to be in \nSymfony\\Bridge\\Doctrine\\Validator\\ConstraintsUniqueEntityValidator\nline 120:\n\n```\n$entity === ($result instanceof \\Iterator ? $result->current() : current($result))\n```\n\ncurrent($result)  returns false here, because the $result array is not rewound.\n\nthere is a rewind for \\Iterator on line 112:\n\n```\n    if ($result instanceof \\Iterator) {\n        $result->rewind();\n    }\n```\n\nso change it to\n\n```\n    if ($result instanceof \\Iterator) {\n        $result->rewind();\n    }\n    else if (is_array($result)) {\n        reset($result);\n    }\n```\n"
+    ]
+  },
+  "9836344": { "comments": ["see dc2cc6b13c8664ed2ae97611d448f98d1cfae2b8\n"] },
+  "9713017": {
+    "comments": [
+      "For now, this only works for PhpAdapter which [converts the glob to a regexp](https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Finder/Iterator/FilenameFilterIterator.php#L64). \n\nBoth Bsd and Gnu adapters are broken since they use `find` command which doesn't support [globs in patterns passed to -name](https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Finder/Adapter/AbstractFindAdapter.php#L171). \n\nQuote from the [find manual](http://unixhelp.ed.ac.uk/CGI/man-cgi?find):\n\n> -name pattern\n>     Base of file name (the path with the leading directories removed) matches shell pattern pattern.\n>     The metacharacters ('_',  '?',  and '[]')  match  a '.' at the start of the base name (this is a change \n>     in findutils-4.2.2; see section STANDARDS CONFORMANCE below).\n>     To ignore a directory and the files under it, use -prune; see an example in the description of -path.\n>     *_Braces  are  not  recognised  as being  special, despite the fact that some shells including Bash\n>     imbue braces with a special meaning in shell patterns.*\\* The filename matching is performed with\n>     the use of the fnmatch(3) library function. **Don't forget to enclose the pattern in quotes  in  order\n>     to protect it from expansion by the shell.**\n",
+      "Would it be possible to force using the PhpAdapter in this specific case?\n",
+      "it just seems strange that it says it supports glob, but only partially, and that you would need to write a hard to read regex or chain multiple calls for things like `->name('*.jpg')->name-('*.jpeg')` when something cleaner like `->name('*.{jpg,jpeg}') could do the job. Just my 2 cents!\n",
+      "@jackmcdade we agree with you, no question about it. The thing is that when you run your code, the finder uses an adapter depending on your platform (to get the best performance possible). The problem is that `PhpAdapter` supports glob but apparently, the find command does not. So my proposal is that when we detect that the developer is using a glob that is not supported by the best adapter, we automatically fallback to PhpAdapter. So, nothing on your side, everything would be done on our side.\n",
+      "Ahh, I follow you now. Is there a way to force the adapter on my side?\n",
+      "Yes, you can (not tested):\n\n``` php\n\nuse Symfony\\Component\\Finder\\Adapter\\PhpAdapter;\nuse Symfony\\Component\\Finder\\Finder;\n\n$finder = new Finder();\n$finder->removeAdapters();\n$finder->addAdapter(new PhpAdapter());\n```\n",
+      "Fantastic. Thanks for answering an undoubtedly noobish Symfony question.\n",
+      "@fabpot another option would be to convert glob to a regex. I'm not sure if that's gonna work, I'll check what's possible.\n",
+      "@jakzal I agree with you, these complex globs could just be turned into regexs.\n"
+    ]
+  },
+  "9649916": {
+    "comments": [
+      "@bschussek Is it resolved or something else should be done?\n",
+      "ping @bschussek does anybody work on this? or I can get it?\n"
+    ]
+  },
+  "9245942": {
+    "comments": [
+      "Renaming methods is not an option, but creating new ones and keeping the old ones as aliases would be good enough (the old method would be deprecated and removed in Symfony 3.0).\n",
+      "After looking at that again, I've decided to close this one as to keep BC would mean to create yet another interface.\n"
+    ]
+  },
+  "8610435": { "comments": [] },
+  "8419747": {
+    "comments": [
+      "There is one problem with this change, that this function does not exists below 5.5.0alpha1\n",
+      "@fabpot This can be closed as #6552 was merged.\n",
+      "Same issue for 5.4.15 (on 2.3)\n\n```\nDeprecated: IntlDateFormatter::setTimeZoneId(): Use datefmt_set_timezone() instead, which also accepts a plain time zone identifier and for which this function is now an alias in /Users/lizjulien/Work/myapp/vendor/symfony/symfony/src/Symfony/Component/Form/Extension/Core/Type/DateType.php on line 271\n```\n",
+      "I'm having this issue on 5.4.17 with Symfony 2.3.\n",
+      "This is weird. The method is deprecated as of 5.5.0. there is no reason to get this message on 5.4.17 (and the replacement method does not exist in 5.4)\n",
+      "I think it is the intl version?  I am using 3.0.0:\n\nhttps://github.com/cataphract/PECL-intl/blob/5cb0ae71d89c0ab9032f8f79657e29ac4300c58f/tests/dateformat_setTimeZoneID_deprecation.phpt#L21\n",
+      "ah, getting intl from pecl instead of compiling it with PHP ? then you can indeed get a more recent version. \nReopening this issue\n",
+      "I also installed intl with pecl, so it seems I got in the same trouble like kbond. Any ideas how can I fix it now? thx\n",
+      "We're also seeing this issue on a FreeBSD 9.1 machine with Symfony 2.3.2, PHP 5.4.17 and pecl-intl 3.0.0\n",
+      "Confirmed issue here.\n",
+      "I've also seen this:\n\n```\n[2013-09-10 10:08:38] request.CRITICAL: Uncaught PHP Exception PHPUnit_Framework_Error_Deprecated: IntlDateFormatter::setTimeZoneId(): Use datefmt_set_timezone() instead, which also accepts a plain time zone identifier and for which this function is now an alias at [...]vendor/symfony/symfony/src/Symfony/Component/Form/Extension/Core/Type/DateType.php line 253\n```\n\nAnd the PHP info:\n\n```\n$ php -i\nphpinfo()\nPHP Version => 5.4.17\n\nSystem => FreeBSD [...] 9.1-RELEASE-p3 FreeBSD 9.1-RELEASE-p3 #0: Mon Apr 29 18:27:25 UTC 2013     root@amd64-builder.daemonology.net:/usr/obj/usr/src/sys/GENERIC amd64\nBuild Date => Aug 26 2013 14:33:57\nConfigure Command =>  './configure'  '--with-layout=GNU' '--localstatedir=/var' '--with-config-file-scan-dir=/usr/local/etc/php' '--disable-all' '--enable-libxml' '--enable-mysqlnd' '--with-libxml-dir=/usr/local' '--with-pcre-regex=/usr/local' '--with-zlib-dir=/usr' '--program-prefix=' '--disable-cgi' '--with-apxs2=/usr/local/sbin/apxs' '--with-regex=php' '--with-zend-vm=CALL' '--prefix=/usr/local' '--mandir=/usr/local/man' '--infodir=/usr/local/info/' '--build=amd64-portbld-freebsd9.1'\n```\n\nNote: I don't see this warning on my PHP 5.4.19 log.\n",
+      "Anyone willing to make a PR to fix that? Apparently, we just need to check the version of intl (>=3.0.0) instead of the version of PHP (>=5.0.0) in our if statements.\n",
+      "The Travis CI build failed https://travis-ci.org/symfony/symfony/builds/11272906\n\nWould it not be better to check the version of php in addition to intl ?\n",
+      "what needs to be checked is the version of the Intl extension, not the ICU version (which will always be greater than `3.0.0`)\n",
+      "I think this should do the trick.\n\n$intl = new ReflectionExtension('intl');\n$IntlVersion = $intl->getVersion();\n\nSorry, that I can't commit it right now, anyway I hope it helps..\n",
+      "However, the stub should also be supported (which cannot be done through `new ReflectionExtension('intl')`). Maybe the simpler solution is to use a `method_exists` check\n",
+      "That should solve the specific case, something else that might make sense in the long-term is putting the version as a static public method in https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Intl/Intl.php \n\nNote: I don't work on the SF2 source code so don't take this as direction from someone who does.\n",
+      "These changes will fail to fix the issue when someone has updated intl manually from PECL. The version number for the pecl version is 'PECL-3.0.0'. Because of that prefix, version_compare will not recognize it as equal to or greater than '3.0.0', which renders all this rather moot, as if the user has intl v3 from PHP 5.5, the old test would have worked, but if they manually updated intl without upgrading PHP, the new test doesn't correctly recognize the version.\n",
+      "@kalzekdor Well crap, I just got hit with the same thing =/\n",
+      "Here, too. I'm a year late to this party but don't see the patch mentioned anywhere...\n",
+      "I know this issue is closed, and this resolution works, but wouldn't it be better to check for the existence of the setTimeZone() method, like so?\n\nif (method_exists($formatter, 'setTimeZone')) {\n$formatter->setTimeZone($timezone);\n} else {\n$formatter->setTimeZoneId($timezone);\n}\n",
+      "@jeffreydwalter how is it implemented right now?\n",
+      "if (version_compare($intlVersion, '3.0.0', '>=')) {\n            $formatter->setTimeZone('UTC');\n        } else {\n            $formatter->setTimeZoneId('UTC');\n        }\n",
+      "@jeffreydwalter  hmm.. which version are you using?\n",
+      "Nevermind, looks like that code has changed in current versions.\n\n@jeffreydwalter https://github.com/jeffreydwalter hmm.. which version are\nyou using?\n\n\u2014\nReply to this email directly or view it on GitHub\nhttps://github.com/symfony/symfony/issues/6029#issuecomment-168337444.\n"
+    ]
+  },
+  "8200475": {
+    "comments": [
+      "I would implement a new Xliff class instead of breaking the existing one\n",
+      "@mvrhov Are you willing to work on a new Xliff loader? As @beberlei mentioned, I think we need to keep the current one for BC reasons, but a new one would be a good idea.\n",
+      "Unfortunately I'm fully booked for the rest of the year. And I doubt I'm going to make it for January 6th feature freeze. \nSo if anybody else is going to take it until I have more time please let me know. \nIMO this issue could be marked as an easy pick.\n",
+      "What would be the desired approach? Fix this for 2.2 or skip it for 2.3? Also, which option is better:\n- new loader / dumper\n- BC break existing ones?\n\nThanks!\n",
+      "@dlsniper We need to keep the existing ones and create new ones along side.\n"
+    ]
+  },
+  "7563119": {
+    "comments": [
+      "I gues taking line 3/4 and then grabbing the \\d's at the end of the line would do. Kinda hackish but not much more than the current solution.\n"
+    ]
+  },
+  "7409912": {
+    "comments": [
+      "Yes, seems right. Will you provide a PR with a test? But please use `rawurldecode`.\n",
+      "Yes. Later. Its not critical.\n",
+      "Hi, is this still a problem given the latest Routing changes? Thanks!\n",
+      "No, It's still present.\n"
+    ]
+  },
+  "7344101": {
+    "comments": [
+      "Not sure if I am missing something but when I run app/console help this appears in the content:\n\nHelp:\n The help command displays help for a given command:\n\n   php ./app/console help list\n\n You can also output the help as XML by using the --xml option:\n\n   php ./app/console help --xml list\n\nIs this not enough?\n",
+      "@pgodel Thies does not tell you that running `app/console list` will show you the available commands.\n",
+      "I'm working on it (currently trying to add tests).\n",
+      "Oh, @denderello was on it too yesterday, with a slightly different approach though, he should push his code.\n",
+      "I updated the tests, but they keep failing for some reason and I can't figure out why...\nAs anyone any idea on what's going on?\n\nExample :\n\n```\n2) Symfony\\Component\\Console\\Tests\\ApplicationTest::testRun\n->run() runs the help command if --help is passed\nFailed asserting that two strings are equal.\n--- Expected\n+++ Actual\n@@ @@\n  The help command displays help for a given command:\n-\n+ \n    php app/console help list\n-\n+ \n  You can also output the help as XML by using the --xml option:\n-\n+ \n    php app/console help --xml list\n-\n+ \n  To display the list of available commands, please use the list command.\n\n '\n\n./symfony/src/Symfony/Component/Console/Tests/ApplicationTest.php:436\n```\n",
+      "End of lines are differents (windows style vs unix typically) or one space ..\n",
+      "Thanks! I was struggling on end of lines and didn't thought of the extra space in empty lines (which are removed automatically by my IDE).\nFixed! The PR can be code reviewed :) .\n",
+      "I didn't had the time to finish my approach yesterday. :/\n\nAm 11.10.2012 um 10:53 schrieb Jordi Boggiano notifications@github.com:\n\n> Oh, @denderello was on it too yesterday, with a slightly different approach though, he should push his code.\n> \n> \u2014\n> Reply to this email directly or view it on GitHub.\n",
+      "I just stumbled over this issue when using Composer and found my way here. I do not think it is properly resolved yet.\n\nI often do not sit in front of my screen to study each command's help output exactly, but am a lazy addict of some patterns. So it took me a while to realize that `composer help` does not list the commands (duh!) as for example `git help` does.\n\nI propose this change:\n\nDo not default `composer help` to mean `composer help help`, but let it be an alias of `composer list`. It is the better overview and also lists the `help` command among the other commands. I argue this would lead to a better UX.\n",
+      "So basically merge help and list commands?\n"
+    ]
+  },
+  "6841472": {
+    "comments": [
+      "There are two reasons to enforce objects at the top level of the JSON responses:\n- http://haacked.com/archive/2009/06/25/json-hijacking.aspx\n- If you always return something like `{items: []}`, the day you need to return the items + some other stuff (total count for paging, related link, anything really)  you can just add it without breaking the API: `{items:[], stuff:woo}`.\n",
+      "- The offending line of code in JsonResponse will do nothing to prevent that. It ONLY changes a top level array to an object when the array is empty.\n- So a line of code that effectively cripples the JsonResponse from being useful is okay because developers can change the API to something that may not conform to what they need to implement against or want? seriously?\n",
+      "I was just explaining why it's like that. Regarding the first point you're right though, it should be enforced always or never. And given that if you follow my second point you'd never need this feature anyway - I'd tend to agree with you that this should just be scrapped altogether.\n",
+      "so big and popular framework and so stu.. bad bug =)\n"
+    ]
+  },
+  "6371759": { "comments": [] },
+  "5776550": { "comments": [] },
+  "5397810": {
+    "comments": [
+      "Similar pattern occurs while adding more connections:\n\n``` php\n\nprotected function getDoctrine_Dbal_MysqlConnectionService()\n{\n    $c->addEventListener(array(0 => 'onFlush'), $this->get('nrc_notice.notice.notice_listener'));\n}\n\nprotected function getDoctrine_Dbal_Mysql2ConnectionService()\n{\n    $c->addEventListener(array(0 => array(0 => 'onFlush')), $this->get('nrc_notice.notice.notice_listener'));\n}\n\nprotected function getDoctrine_Dbal_PlatConnectionService()\n{\n    $c->addEventListener(array(0 => array(0 => array(0 => 'onFlush'))), $this->get('nrc_notice.notice.notice_listener'));\n}\n```\n",
+      "I also ran into what seems to be this same issue with multiple `doctrine_mongodb` connections\n",
+      "@trooney Can you re-open this issue on the [DoctrineBundle](https://github.com/doctrine/DoctrineBundle)? It seems to be a configuration issue. \n\n@tystr Can you open an issue on the [DoctrineMongoDBBundle](https://github.com/doctrine/DoctrineMongoDBBundle)?\n",
+      "@asm89 the compiler pass is in the Symfony bridge (to share the code between all bundles) so this issue tracker was the right place. Reopening\n",
+      "Ah, my bad. I'm looking into it.\n",
+      "@trooney @tystr Can you too check that the issue is fixed now? :)\n",
+      "Looks good to me! \n",
+      "yep, looks good to me as well \n"
+    ]
+  },
+  "5330186": {
+    "comments": [
+      "I don't think 'always' using this is wise, as there are some problems with using this method on HTTP1.1\nInstead we should check if $_SERVER['SERVER_PROTOCOL'] equals HTTP/1.0 and then add those headers.\n",
+      "@sstok What problems? Is HTTP/1.1 not correctly implemented in some browser or reverse proxy?\n",
+      "Pragma has some problem's whit IE up to IE8.\nhttp://stackoverflow.com/questions/1038707/cant-display-pdf-from-https-in-ie-8-on-64-bit-vista\n\nIE refuses to let PDF downloads work when configured incorrectly (according to IE...).\nThe specs say that using Pragma for compatibility is no problem, but it must be configured correctly or else some browsers will work incorrect.\n",
+      "Anyone willing to work on this one. Should be easy enough to implement.\n"
+    ]
+  },
+  "4892872": {
+    "comments": [
+      "I'm agree. I have a form where I need to reset the transformers first and latter add my own transformers, because it won't be called otherwise. If I have a way to prepend the transformer, I don't need to do that.\n",
+      "Working on it\n",
+      "I'm sorry, can you tell me when the fix to these issues will be available in the 2.0 branch ?\n"
+    ]
+  },
+  "4546032": {
+    "comments": [
+      "It was the case previously. It has probably been broken with the redesign. Anyone willing to have a look at this?\n",
+      "After the redesign one line was removed from the WebProfilerBundle:Profiler:toolbar.html.twig: \n\n``` html\n<div style=clear: both; height: 40px;></div>\n```\n\n@fabpot What way do you prefer: reinsert the div like before (which works fine) or use the body padding way, as proposed by @nysander.\n",
+      "body padding is the way to go as this is a style issue. on the other hand, say the user already has body padding, it would need to be added which is not possible with css. so the extra markup might be the better way as it preserves the user style.\n",
+      "I think the `div` is better as this is less intrusive. What if the page already has a padding bottom?\n",
+      "Both ways are good. To be clear you set margin not padding in my solution, and adding !important makes this margin overrides any before set body margin bottom. But I think that div will do its job, just add 10px more to its height as currently toolbar has about 10px shadow on hover.\n"
+    ]
+  },
+  "4279499": {
+    "comments": [
+      "@bschussek: Ping.\n",
+      "This option has been removed again and is not available anymore. The UPGRADE file should be adapted accordingly.\n\nPS: You don't need to ping me for every ticket that you open. I'm reading them anyway if you file them under Form.\n",
+      "Alright.\n\nWhat do you mean by `file them under Form`? I'm not allowed to assign labels to issues in this repo.\n",
+      "I think you can assign them when you open the issue. In any case, you should prefix the ticket's name with the affected component in square brackets. Then the right people will read it pretty soon.\n",
+      "@bschussek only repo collaborators can add labels on github issues\n",
+      "Oh I see. My bad then.\n"
+    ]
+  },
+  "4236377": {
+    "comments": [
+      "@vicb @bschussek ok for you?\n",
+      "please do also rephrase the commit message to something clearer, like\n\n```\n[Form] added method `guessPattern` to FormTypeGuesserInterface\n```\n",
+      "Otherwise this looks good :)\n",
+      "every changes done\n",
+      "Thanks!\n"
+    ]
+  },
+  "4213658": {
+    "comments": [
+      "Do tests exist for this? If no, they should be added as well to make sure no-one removes this functionality.\n",
+      "@vicb can you tell me what exactly needs to be commented so that I could fix this issue?\n\nThanks!\n",
+      "@dlsniper that was about [returning null value](https://github.com/symfony/symfony/pull/3927#discussion_r682684). The code has changed so much that I can close this issue now.\n"
+    ]
+  },
+  "4206083": {
+    "comments": [
+      "There  is the same issue in the FilenameFilterIterator.\n\nThe test could be factorized in the parent class MultiplePcreFilterIteraror\n",
+      "Can you work on a fix?\n",
+      "working on fixing this\n"
+    ]
+  },
+  "4205402": {
+    "comments": [
+      "Hi Fabien,\n\nWhat is the best method to patch it in your opinion? \n\nModification of `REGEX_QUOTED_STRING`?\n",
+      "But I think the snippet you gave is invalid in YAML\n\n``` yaml\ntest: 'don't do somthin' like that'\n```\n\nSingle quotes need to be escaped by doubling them so it should be\n\n``` yaml\ntest: 'don''t do somthin'' like that'\n```\n",
+      "@stof: correct. The problem is that the parser does not emit any error, it just ignores the end of the string, which is wrong.\n",
+      "I've created a test to ensure the previously mentioned string causes a Symfony\\Component\\Yaml\\Exception\\ParseException .\n\nJust posting fix and then will create pull request.\n",
+      "Another test to consider:\n    `test: dont do somthin like that`\n\nWhich shouldn't parse either (but currently does), fixed in above pull request.\n",
+      "Whoops, I guess I posted on the wrong repo, thanks for pulling the bug report to the right place.\n",
+      "Minor amendments made as per @fabpot 's request\n"
+    ]
+  },
+  "4187300": {
+    "comments": [
+      "When the DelegatingValidationListener is refactored (see #3903), this can be implemented. What you want is basically a custom mapping function that maps the property paths\n\ndata[0]\ndata[1]\n\nto the forms\n\nchildren[Mon].children[0]\nchildren[Mon].children[1]\n\nA second solution for your problem is to make the forms Mon, Tue etc. _virtual_. Virtual forms are used for presentation only and are not mapped directly to the domain model, resulting in the mapping:\n\ndata[0] <-> children[Mon].children[0]\ndata[1] <-> children[Mon].children[1]\ndata[2] <-> children[Tue].children[2]\n\nTo do this, you would have to move your value transformer logic to a form listener that rebuilds the form every time your data is set.\n",
+      "Thanks for your explanation. For now I'll keep it as-is and wait for #3903 to be resolved. The form between the base and the entity forms also contain quite some logic which would probably result in a lot of refactoring and possibly unclean code. I'll resort to the _virtual_ solution if I'll find myself running out of time before the issue is resolved\n",
+      "Can you please verify if this is fixed by #4341?\n",
+      "@bschussek it appears the bug still exists. The error is still mapped to data[2].break rather than data[Wed][0].break (or something similar)\n\nAnything I can do to help you debug?\n",
+      "I think that the mapping function I described above is not really feasible. I rather think now that your use case is exactly the use case of virtual forms.\n\nCould you test whether virtual forms fix your problem?\n",
+      "@bschussek When the deadline approached a while ago, I implemented the work-a-round you provided around a month ago, and this indeed worked fine.\n\nDoes this mean that the way the form was before, is actually not intended use?\n",
+      "Yes, forms are not intended to be used like that. A form that does not map to a property of the underlying data should either be unmapped (property_path => false, or mapped => false as of #4341) or virtual (virtual => true).\n",
+      "See also symfony/symfony-docs#1387\n"
+    ]
+  },
+  "4169155": { "comments": [] },
+  "4117969": {
+    "comments": [
+      "Could you please add an entry to the CHANGELOG and squash your commits into one?\n",
+      "Done\n"
+    ]
+  },
+  "4104878": {
+    "comments": [
+      "You need to revert change of permissions.\n",
+      "Some file permissions have been changed in your commit, they should be reverted\n",
+      "What do you mean by please revert all permission changes because i did not change any permissions by myself :/\n",
+      "@ruian which OS are you using ? If you are on windows, you should configure git to ignore file permissions (as Windows cannot handle them). Msysgit should do it by default but some other tools don't configure git this way: http://stackoverflow.com/questions/6476513/git-file-permissions-on-windows-7\n",
+      "@stof i'm on linux but i did not change any chmod or chown since a clone the repo\n",
+      "@ruian In your pull request, you are changing file permissions from 644 to 755. This is what should be reverted\n",
+      "Can you squash your commits ?\n",
+      "you mean rebase ? If it the case i have never test\n",
+      "Look at [the doc](http://symfony.com/doc/master/contributing/code/patches.html#id1) at the end of the page ;)\n",
+      "Yep i will look at it\n",
+      "@stof  I squash my commits. It's ok ?\n",
+      "It looks good to me. @fabpot @bschussek ready for the final review\n\n@ruian could you send PRs to https://github.com/doctrine/DoctrineMongoDBBundle https://github.com/doctrine/DoctrinePHPCRBundle and https://github.com/doctrine/DoctrineCouchDBBundle to add the new method ?\n",
+      "yep sure\n",
+      "@stof I made all Doctrine PRs to respect this new one\n",
+      "@bschussek any comments on this PR ?\n",
+      "Hi @ruian, thank you for the PR! I added some comments and hope you can check them soon. If you need help, just drop a message.\n",
+      "@bschussek thx for your comments, i will do this as soon as possible\n",
+      "@bschussek should i remove all call to guessMinLength ?\n",
+      "@ruian Yes, guessMinLength() can be removed entirely (and all references to it).\n",
+      "ping @bschussek is it good like this ?\n",
+      "@bschussek @vicb i think it's good now, and i think i understood the diff between Size and SizeLength Constraint ValueGuess (One is for numeric and the other for string). It was not clear in my mind when i made the change. But now it's okay\n",
+      "Please squash the commits once you're done. You should also update the CHANGELOG.\n",
+      "This needs to be rebased with also as it currently wont merge. (git fetch; git rebase origin/master).\n",
+      "something is strange with this PR .. why is it marked as merged by @ruian? and why are there no changes in the diff? and why was it labeled as no BC break?\n",
+      "@lsmith77 I don't know, what append, i merge the master into my branch...\nSo a recreate a PR https://github.com/symfony/symfony/pull/4077 but it seems alright now.\n",
+      "@lsmith77 You are right, this should be marked as BC break. I originally thought that guessMinLength() was only introduced after 2.0, but it was not. I will update the documentation.\n",
+      "@bschussek do you want i create a new PR for the changelog ?\n",
+      "@ruian I already did this. Thanks anyway!\n"
+    ]
+  },
+  "4058998": {
+    "comments": [
+      "Support for forms with an empty root name (to have a field named `search` instead of `myform[search]`) has been added for 2.1\n",
+      "It seems that the form rendering shouldn't be any different when you use a field named search in a form named search. There might be something wrong going on.\n\nAnyway, 2.1 will fix my use case so I'll close this report.\n",
+      "Are you sure there is a difference between a form named `search` vs any other name? Can you provide a test case for it?\n",
+      "With the above form class:\n\n```\n{{ form_widget(form) }}\n```\n\ngives\n\n``` html\n<input type=search id=search name=search required=required />\n```\n\nwhereas\n\n``` twig\n{{ form_errors(form) }}\n{{ form_rest(form) }}\n```\n\ngives\n\n``` html\n<div><label for=search_search class= required>Search</label><input type=text id=search_search name=search[search] required=required /></div>\n```\n\nWith a form named test and a field named search both methods lead to the same HTML, and the same goes for a form named test with a single field named test.\n",
+      "That's strange. Is it also true for current master? If yes, you can reopen the ticket I think,\n",
+      "Yeah same with the master branch.\nThe inital issue was about setting default data but the actual bug seems to be in `form_widget(form)` in twig with a form where the name and the single field it contains are named search. See my comment above for more details.\n",
+      "Task for the BHD: Create a failing test case\n",
+      "I will have a look at this one today.\n",
+      "The reason is, that there is already a built-in type search. \n\n```\n{{ form_widget(form) }} \n```\n\ndoes display the form with the search_widget block. This doesn't work.\n\nYou must not give your form types the same name as built-in types. Naming the form radio or checkbox fails as well :)\n",
+      "the type name is an identifier. If you reuse the same name, it replaces the previous type in the factory.\n",
+      "Does this mean we can close this issue?\n",
+      "Well yes. You can override the built-in type search. But if you want to display the search form as described in the issue correctly, you also have to override the search_widget block from form_div_layout.html.twig. \n\nMcDouls problem is that as soon as he names his form search, it will be rendered by the search_widget block instead of the form_widget block. I think this is expected behaviour and not a bug.\n",
+      "IMO this should be documented in docs to make it clear.\n",
+      "Good. Please open an issue in the docs.\n"
+    ]
+  },
+  "3948095": {
+    "comments": [
+      "Re-qualifying it as a feature request as the form component never advocated guessing the pattern option.\n",
+      "i believe the option was there once, but the errors that browsers gave when it didn't validate was so obscure, that it was removed. I can't find the specific commit, though\n",
+      "The pattern is in fact set when a @MinLength constraint is set. I think we should add a guessPattern() method to FormTypeGuesserInterface (task for the BHD).\n",
+      "I'm working on a patch\n",
+      "I look forward to updates =)\n",
+      "fixed by PR #4077\n",
+      "It seems it doesn't works anymore in Symfony 2.5.6. No pattern is added in html. \n\nFrom what I can see in FormFactory, the call to guessPattern is only made when calling createBuilderForProperty, but not when calling createBuilder.\n"
+    ]
+  },
+  "3416929": {
+    "comments": [
+      "Hi @umpirsky !\nIf I correctly understand your issue, you should explicitly use the `entity` field type: http://symfony.com/doc/current/reference/forms/types/entity.html. \nMoreover, you should use the google group for questions like this one.\n",
+      "Thanks @michelsalib.\n\nI would like to try your fix but I'm stuck with [composer](https://github.com/symfony/symfony-standard/issues/278) and can't install vendors.\n\nHowever, don't you think that form component should be intelligent enough and guess the type for `category` field, since [Product](https://github.com/umpirsky/symfony-standard/blob/f59d47767a07bf1e06d55a2ebff13a13ae6aa199/src/Acme/DemoBundle/Entity/Product.php) contains `category` member which is of [Category](https://github.com/umpirsky/symfony-standard/blob/f59d47767a07bf1e06d55a2ebff13a13ae6aa199/src/Acme/DemoBundle/Entity/Category.php) type (entity)?\n\nThank you very much for your response, really appreciate it.\n",
+      "I posted a new question on http://groups.google.com/group/symfony2/browse_frm/thread/f9402d2f5a744d18\n",
+      "Can you please verify whether #3789 fixes your problem?\n",
+      "Task for the BHD: Validate this bug and create a failing test case, if possible\n",
+      "I tried to reproduce the issue but it appears to work fine with the current master branch.\n\nI defined a ManyToOne field in the entity and added the field in the form without any explicit field type or option, and the field is built as an EntityType.\n\nI can provide a test case if necessary but I think this issue can be closed.\n",
+      "@pvanliefland Thanks.\n"
+    ]
+  },
+  "3100645": {
+    "comments": [
+      "The mapping algorithm is fragile and it breaks easily. @bschussek: any idea on how we can make it more reliable (without generating all the possible paths which would make everything really slow for bigger forms)?\n",
+      "@fabpot: Yes, the mapping algorithm was something quick and dirty that long needs to be fixed. I'm not sure whether a recursive solution works (due to maximum function nesting level), but I want to work on this soon. \n\nRelated issues: #1810, #1971, #2729, #2801, #3018\n",
+      "Can you please verify if this is fixed by #4341?\n",
+      "This is fixed by #4341, although a different error exists that is described in #4368.\n"
+    ]
+  },
+  "3065657": {
+    "comments": [
+      "I think it should actually be the other way around: it should not accept arrays & should throw an exception when loading the yaml (to make it consistent with xml).\n",
+      "I'd volunteer to solve this one.\n",
+      "@denderello any news about a fix for this ?\n",
+      "Task for the BHD: update the YamlFileLoader to check for scalar types (in order to be consistent with the XML format), add unit tests.\n",
+      "Should be fixed with: https://github.com/symfony/symfony/pull/3921\n",
+      "@phreaknerd: Can this be closed? Github didn't auto-close this because Fix issue #3251 probably wasn't picked up by its own issue-closing hook.\n"
+    ]
+  },
+  "2949851": {
+    "comments": [
+      "What's the point of a static method in an interface?\n",
+      "I'm using `Symfony\\Component\\Validator` for validating some Yaml files and i need to declare loadValidatorMetadata for this `Validateable` objects. Only interfaces can have static methods in PHP and does not supports `abstract static function`.\n",
+      "Are you saying that if you remove the method from the interface, the validator complains?\n",
+      "Well, it is probably the same kind of issue than #2841: the validator uses Reflection, which means it will not take care of inheritance. So if the validation rule is applied on a parent class or an interface, it will call this method, not the child one. The same stuff seems to occur here\n",
+      "@bschussek No, when i remove it from interface, Reflection calls correct method. Only i want to use an concept / interface for my `Validateable` objects. \n\nNow i changed my static method validation constraints to collection constraints and i'm validating it like this https://github.com/import/heatbeat/blob/feature/nodes-and-leafs/lib/Heatbeat/Leaf/AbstractLeaf.php#L54\n",
+      "Task for the BHD: Add a failing test case to StaticMethodLoaderTest and (optionally) fix it by adding a check to StaticMethodLoader:35 that returns false if the method is abstract.\n",
+      "> Task for the BHD: Add a failing test case to StaticMethodLoaderTest and (optionally) fix it by adding a check to StaticMethodLoader:35 that returns false if the method is abstract.\n\nIt's not really possible to have a static abstract method (at least in strict mode). My PR is invalid as it only checks for abstract class.\n",
+      "reopening as the fix has been reverted\n",
+      "I know this is an old issue, but I faced the same problem, but with abstract classes. When I declare the loadValidatorMetadata method in an abstract class, this method is called, not the overriding method in the child class.\n\nSolution is simple: we just need to call isAbstract method on the $reflMethod object in StaticMethodLoader class and return false if is it true.\n",
+      "@ntomka Can you submit a PR or open a new issue?\n"
+    ]
+  },
+  "2915647": { "comments": ["I'll take this one.\n"] },
+  "2777072": {
+    "comments": [
+      "I have things working fine for a field mapped as array (and it makes no difference for the Form itself).\n\nthe real issue is probably about using hidden as type in the collection.\n",
+      "Same issue for me and no hidden type.\n\n```\n$builder            \n        ->add('photos', 'collection', array(\n                'type' => new PhotoItemType(),\n                'allow_add'    => true,\n                'allow_delete' => true,\n                'prototype' => true,\n        ))\n;\n```\n\n`PhotoItemType`\n\n```\n    $builder\n        ->add('name', 'text', array(\n            'required' => false,\n        ))\n    ;\n```\n\n`Template`\n\n```\n{{ form.photos.get('prototype') }}\n```\n\n=> outputs an empty string\n\nBut the wrapper around the subform has the good value for data-prototype attribute.\n",
+      "`{{ form.photos.get('prototype') }}` (or alternatively `{{ form.photos.vars.prototype }}`) returns a FormView object that doesn't feature a __toString() method. I'm not sure how Twig handles this case, but it could well be that it simply swallows the error here.\n\nCan you try `{{ form_widget(form.photos.vars.prototype) }}` instead?\n",
+      "Task for the BHD: Validate this bug and create a failing test in AbstractLayoutTest\n",
+      "Could not reproduce this with the latest version (installed by cloning symfony-standard today). The api has changed, so I had to write this : `{% debug form_widget(form.extraAttributes.getVar('prototype')) %}` which outputs this : `string '<input type=hidden id=acme_demobundle_producttype_extraAttributes___name__ name=acme_demobundle_producttype[extraAttributes][__name__] />' (length=143)`\n",
+      "Ok. Closing.\n",
+      "i've experienced this issue too with sf 2.1.3 \n\ni was doing smth like \n\n```\n<form>\n        {% for hst in form.WorkingHist %}\n           <li>{{ form_row(hst) }}</li>\n        {% endfor %}\n</form>\n\n<script type=text/javascript>\n  prot = {{ form_widget(form.WorkingHist.get('prototype'))|e('js') }};\n</script>\n```\n\nAnd my prototype was alway empty .when the collection has 0 elements ... but it was fine if there were at least one element.\n\ni had to put the get prototype before my for loop, then it worked correctly \n",
+      "@eMerzh Could you please create a fork of symfony-standard that reproduces the problem?\n",
+      "I have the same issue, and i just solved the problem by moving the prototype above the loop rendering the widget. Thank you for that workaround.\n"
+    ]
+  },
+  "2638748": {
+    "comments": [
+      "Do we have any updates on this?\nAny ideas on how to fix it?\nI want to help. Where can I start looking for the solution?\n",
+      "@bschussek @fabpot do you have time to give your mind on this ?\n",
+      "DelegatingValidator needs to ignore validation errors on non-synchronized fields. Scheduled for the DelegatingValidator refactoring.\n",
+      "Interesting. I'd like keep an eye on this.\n\nCurrently, I use a dirty workaround to simply ignore notblank message.\n\n``` jinja\n            {% set pswdUnmatched = false %}\n            {% for error in form.vars.errors if error.messageTemplate == 'password.unmatched' %}\n                {% set pswdUnmatched = true  %}\n            {% endfor %}\n            {% if pswdUnmatched %}\n                <ul>\n                {% for error in form.vars.errors %}\n                    {% if error.messageTemplate != 'Please enter a password' %}\n                    <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>\n                    {% endif %}\n                {% endfor %}\n                </ul>\n            {% else %}\n                {{ form_errors(form) }}\n            {% endif %}\n```\n",
+      "@bschussek ping\n",
+      "Can you please verify if this is fixed by #4341?\n",
+      "This is fixed by #4341.\n",
+      "What do we need to get this fix ?\n",
+      "@fpoirier1 using Symfony 2.1 (currently in RC2)\n",
+      "Oh I see thanks\n\nOn Thu, Aug 30, 2012 at 4:41 PM, Christophe Coevoet <\nnotifications@github.com> wrote:\n\n> @fpoirier1 https://github.com/fpoirier1 using Symfony 2.1 (currently in\n> RC2)\n> \n> \u2014\n> Reply to this email directly or view it on GitHubhttps://github.com/symfony/symfony/issues/2945#issuecomment-8173701.\n"
+    ]
+  },
+  "2356260": {
+    "comments": [
+      "I've managed to workaround this problem by specifying the property path of the year element:\n\n```\n->createBuilder('form', new Post, array(\n    'error_mapping' => array(\n        'date[year]' => 'date.year',\n    ),\n))\n```\n\nI've noticed a similar issue when mixing camelCase and under_score names:\n\n``` php\n<?php\n\nclass Post\n{\n    /** @NotBlank */\n    private $userName = 'Joe';\n\n    function getUserName()\n    {\n        return $this->userName;\n    }\n\n    function setUserName($name)\n    {\n        $this->userName = $name;\n    }\n}\n\n$form = $this->get('form.factory')\n    ->createBuilder('form', new Post)\n    ->add('user_name')\n    ->getForm()\n    ;\n\n$form->bind(array());\n\necho $form->getErrorsAsString();\n```\n\nResult:\n\n```\nERROR: This value should not be blank\nuser_name:\n    No errors\n```\n\nThe form works properly, only errors aren't mapped correctly.\n",
+      "when mixing camelCase and underscores, the result is normal. `userName` and `user_name` can be different properties. The only reason why `user_name` works for the form here is because the conventions to guess the getter name result in the same name in both cases. If you were doing this with a code using reflection instead of the form using the getters, it would fail.\n",
+      "@arnaud-lb can you check again with master ?\n",
+      "Task for the BHD: Verify this bug on master and create a failing test case in DelegatingValidatorTest\n",
+      "@stof @bschussek I can confirm the bug on current master\n",
+      "Can you please check whether this is fixed by #4341?\n",
+      "> Can you please check whether this is fixed by #4341?\n\nYes it does :) Thanks !\n"
+    ]
+  },
+  "2279872": {
+    "comments": [
+      "I agree.\nBut I don't know what the best solution:\n- Solution 1: Keep `min` and `max` options in `Choice` validator (it's useful) and create new additionals validators called `MinCount` / `MaxCount` \n- Solution 2: Move count validation rules from `Choice` to news validators called `MinCount` / `MaxCount` \n\nI have a preference for the first solution.\n",
+      "It also could be one valldator `Count` with two options `min` and `max` (instead of `MinCount / MaxCount`)\n",
+      "Yes, I think it's better\n",
+      "@bschussek what do you think about it ?\n",
+      "I would prefer a `Size` validator that works on arrays.\n",
+      "Task for the BHD: Change SizeValidator to accept any Countable object.\n",
+      "fixed by #4149 (and the [Size](https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Validator/Constraints/Size.php) constraint)\n"
+    ]
+  },
+  "2170024": {
+    "comments": [
+      "Maybe just :\n\n``` php\n<?php\n$this->originalName = substr(strrchr(str_replace('\\\\', '/', $originalName), '/'), 1);\n```\n\nBTW why use `basename` ?\n",
+      "@fabpot ping\n",
+      "@fabpot ping\n",
+      "@fabpot ping\n",
+      "@fabpot ping\n",
+      "Imho, this should not modify the value that comes from the browser - one might need it as raw value.\n\nThis check should matter only if you are trying to directly save the uploaded file without specifying a filename to be used.\n",
+      "@fabpot ping\n",
+      "@dinamic this value could be forged so sanitization is required.\n\nCould anyone submit a PR with the fix suggested by @stealth35 + unit tests.\n\nThanks.\n",
+      "@vicb I meant to say that the sanitization which is performed is going to be needed _only_ if you rely on the $originalName to return you a value, which would be safe to use on the current system. Doing so however should fall beyond the scope of this class.\n\nLet me explain more promptly my point of view.\n\nI will give you an example case:\n- I want to upload a file named aux\n- The server is powered by Windows NT\n\nWhile this is perfectly valid case and you will have no troubles running it under *NIX, you will fall into trouble if your hosting service is running on Windows-based OS, as the AUX is a reserved filename there.\n\nMore information: http://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words\n\nImho, the value of originalName should not be filtered and it has to be up for the developer to choose a filename for the uploaded file. If some filtration has to be applied, it should be minimal and the developer should have access to the unmodified value.\n\n_Note: if we accept that the value would not be filtered, it has to be reflected into the docs and stress how important is to not rely on the safety of the value._\n",
+      "The purpose of the sanitization is not the make the name bullet proof but to prevent security issues (there is no way to prevent a developer from using it even if he must not) - the $originalName can still contain reserved characters or be a reserved name.\n\n`getClientOriginalName()` already has a warning in its phpDoc: `Then is should not be considered as a safe value.`\n\nWhat would be the advantage of having access to the unfiltered name ?\n",
+      "Well, it would prevent us from getting one value from the client of our website and display a different one.\n\nWe could filter it, off course, but it has to be up for the developer to decide it and the framework should not force filtration. Otherwise, some developers might just go backward and use the $_FILES array to get the job done.\n",
+      "The sanitization removes the path segment and leaves only the basename. I have just re-tested (w/ chrome & ff) and only the basename is sent by the browser, meaning that the sanitization is transparent and will only have an effect on forged values.\n\nThere must be something I don't get ?\n",
+      "Dunno, I just hate it when there's a restriction which might cause a bug in your application and you can't get the raw value and process it by yourself. Right now, we have multiple opened issues because of this and I cannot implement a workaround without actually modifying the sf2 code or completely handle the upload process, validation and entity creation by myself.\n\nI just want a getter method which would return the unaltered value, so if the new sanitization blocks me or anyone else - he could handle it gracefully until fixed.\n",
+      "> Dunno, I just hate it when there's a restriction which might cause a bug in your application and you can't get the raw value and process it by yourself. Right now, we have multiple opened issues because of this and I cannot implement a workaround without actually modifying the sf2 code or completely handle the upload process, validation and entity creation by myself.\n\nAs stated in my last comment, you'll get the raw value unless someone forges a request, how could that cause issues ?\n",
+      "Well, I believe the same intention applied while setting `basename()` in first place :)\n"
+    ]
+  },
+  "2056030": {
+    "comments": [
+      "Because Constraints called on a property level are called with direct reference to validated property, they do not have access to validated object, thus they can't call methods on it.\n",
+      "@bschussek ping\n",
+      "@canni Did you ever send a pull request for the commit referencing the issue ?\n",
+      "I'll try to do it\n",
+      "@stof my implementation was somehow ugly, thats why I never done a PR for this\n",
+      "Closing this issue as PR #3939 is where the discussion happens now.\n"
+    ]
+  },
+  "1415333": {
+    "comments": [
+      "I have this same issue. Any luck figuring out a fix or workaround?\n",
+      "Nope, I kind of gave up on it... To put a workaround together you would need to know the form and validation architecture inside-out, and I have not gotten that far yet.\n",
+      "I was able to workaround the issue on the repeated password field. But I'm having the same issue in a form with FOSUserBundle password reset form now with no hope of fixing it...\n",
+      "Do you mind sharing your workaround solution?\n",
+      "Sure, I just used the password field as type password, then included another field with property_path set to false. then created a validation method to set an error like this... \n...\nuse Symfony\\Component\\Form\\FormBuilder;\nuse Symfony\\Component\\Form\\FormError;\nuse Symfony\\Component\\Form\\CallbackValidator;\n....\n\npublic function buildForm(FormBuilder $builder, array $options)\n{\n    $builder\n        ->add('Password', 'password')\n        ->add('Confirm', 'password', array('property_path' => false))\n}\n\n$builder->addValidator(new CallbackValidator(function($form)\n{\n    if($form['Confirm']->getData() != $form['Password']->getData()) {\n        $form['Confirm']->addError(new FormError('Passwords must match.'));\n    }\n}));\n\nThen I created a form theme to style the error message. But I cant figure out how to do this in the password reset form in FOSUserBundle for the Current field. I'm guessing because the field doesn't exist in the Model, the error belongs to the form? ugh... \n",
+      "RepeatedType should use the error_mapping option, which currently is not able of coping with this situation. To be fixed in the DelegatingValidator refactoring.\n",
+      "I have the same issue, but when I have nested forms.\n",
+      "@bschussek ping\n",
+      "have the same issue when having nested forms\n",
+      "Task for the BHD: Add failing tests to Abstract[Div|Table]LayoutTest\n",
+      "I'm looking into this.\n",
+      "Can you please verify if this is fixed by #4341?\n",
+      "Fixed by #4341.\n",
+      "So, I have the same issue. Is it fixed in version 2.1 or is there a patch possibility for version 2 as well?\n",
+      "@babelduo This ticket is closed because it has been fixed in 2.1. There is no patch possible for 2.0 as fixing the issue required rewriting the way error are mapped on forms, which is not a simple bugfix.\n"
+    ]
+  },
+  "1346672": {
+    "comments": [
+      "To improve this, i18n routing would need to be supported by the Routing component. Right now, this implementation is a bit hackish.\n",
+      "Btw, are you using one of these bundles JMSI18nRoutingBundle, BeSimpleI18nRoutingBundle ?\n",
+      "In this case, no. Simply the core router.\n",
+      "I don't think we can fix this in core, you'll need to overwrite the HttpUtils class and add whatever logic is necessary to determine the correct locale.\n",
+      "Well, I'm using only the core tool in this case so it should be fixed in the core.\nIMO, it should default to the locale from the session when it does not have it from the route (just like the router does, except that the logic of the router has not been done yet when the firewall is used as it is run after intentionally)\n",
+      "I thought that was the case already, but after looking at the code this part of the code seems to be unreachable atm.\n",
+      "This should be fixed now as the hackish part of HttpUtils has been removed. Can you confirm and close? Thanks.\n",
+      "There is the same bug inside error 404 page (with or without firewall).\n\nFor example (the `homepage` route has the pattern `/{_locale}/home`) :\nThe `app/Resources/TwigBundle/views/Exception/error404.html.twig` file :\n\n```\n{% extends '::layout.html.twig' %}\n\n{% block body %}\n        <h1>{% trans %}Error 404{% endtrans %}</h1>\n        {% trans %}Page not found{% endtrans %}\n{% endblock %}\n```\n\nAnd the `app/Resources/views/layout.html.twig` :\n\n```\n<!DOCTYPE html>\n<html lang={{ app.session.locale }}>\n    <head>\n        ....\n    </head>\n    <body>\n        ....\n        <div id=menu>\n            <a href={{ path('homepage') }}>Home</a>\n        </div>\n        ....\n        {% block body %}{% endblock %}\n    </body>\n</html>\n```\n\nWhen accessing a inexistent url, the exception is thrown: \n\n```\nException thrown when handling an exception (Twig_Error_Runtime: An exception has been thrown during the rendering of a template (The homepage route has some missing mandatory parameters (_locale).) in ::layout.html.twig\n```\n\nIs it necessary to open a new issue ?\n",
+      "Task for the BHD: check if the issue still exists in 2.0 / 2.1\n",
+      "The error is still here. i'm searching to fix it.\n",
+      "so i talked with fabpot, and the _locale is passed throw the url, and because of a 404 error, we can't know what is the _local from the url who is unknown.\nSo to prevent this kind of error you need to passe default _locale into your routing or with the {{path()}} function.\nBut there is no full support for this problem.\n",
+      "this isssue can be claused (source @fabpot )\n"
+    ]
+  },
+  "1322186": {
+    "comments": [
+      "@mvrhov did #3564 fix your issue ?\n",
+      "Can you give me a couple of days to confirm. I have to update an app using ~one year old experimental forms branch, which is also using custom auth providers.\n",
+      "I still haven't had the time to fully update my code to be able confirm this.\n",
+      "Task for the BHD: check if this issue still exists in 2.0 / 2.1\n",
+      "@vicb: aa53b887d111aca141682258f85d279139f11079 (i.e. the #3564 fix) did not fix the issue, but 347053c363aac66e79e91a3c0a205e417521c153 did; therefore the issue exists in [v2.0.15](https://github.com/symfony/symfony-standard/tree/v2.0.15) but not in [v2.1.0-BETA1](https://github.com/symfony/symfony-standard/tree/v2.1.0-BETA1). A test case is available at https://gist.github.com/3007325\n",
+      "@vicb This issue is fixed then?\n",
+      "Closing this issue as it is fixed in master.\n"
+    ]
+  },
+  "1288490": {
+    "comments": [
+      "What about using the `apache_request_headers()` function ?\n\nSee: https://github.com/symfony/symfony/issues/1510\n",
+      "@fabpot, should we maybe add some extra abstraction for this to the Request class?\n",
+      "+1, the request should definitly abstract this.\n",
+      "The following works as a temporary workaround:\n\napp_dev.php:\n\n```\nif( !isset($_SERVER['PHP_AUTH_USER']) )\n{\n    if (isset($_SERVER['HTTP_AUTHORIZATION']) && (strlen($_SERVER['HTTP_AUTHORIZATION']) > 0)){\n        list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));\n        if( strlen($_SERVER['PHP_AUTH_USER']) == 0 || strlen($_SERVER['PHP_AUTH_PW']) == 0 )\n        {\n            unset($_SERVER['PHP_AUTH_USER']);\n            unset($_SERVER['PHP_AUTH_PW']);\n        }\n    }\n}\n```\n\nweb/.htaccess\n\n```\n<IfModule mod_rewrite.c>\nRewriteEngine On\nRewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L] RewriteCond %{REQUEST_FILENAME} !-f\nRewriteRule ^(.*)$ app.php [QSA,L]\n</IfModule>\n```\n",
+      "It works fine for me with FastCGI and Nginx.\n\nCan you paste the whole output of `$_SERVER` when not using the workaround?\n",
+      "Here is the output of $_SERVER without the workaround:\n\n```\n    Array\n    (\n        [ALLUSERSPROFILE] => C:\\ProgramData\n        [APPDATA] => C:\\windows\\system32\\config\\systemprofile\\AppData\\Roaming\n        [asl_log] => Destination=file\n        [CLASSPATH] => .;C:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip\n        [CommonProgramFiles] => C:\\Program Files\\Common Files\n        [COMPUTERNAME] => HP\n        [ComSpec] => C:\\windows\\system32\\cmd.exe\n        [DB2INSTANCE] => DB2\n        [FP_NO_HOST_CHECK] => NO\n        [LOCALAPPDATA] => C:\\windows\\system32\\config\\systemprofile\\AppData\\Local\n        [NUMBER_OF_PROCESSORS] => 4\n        [OnlineServices] => Online Services\n        [OS] => Windows_NT\n        [Path] => C:\\windows\\system32;C:\\windows;C:\\windows\\System32\\Wbem;C:\\windows\\System32\\WindowsPowerShell\\v1.0\\;c:\\Program Files\\Hewlett-Packard\\Drive Encryption\\;C:\\Program Files\\WIDCOMM\\Bluetooth Software\\;C:\\Program Files\\Broadcom\\Broadcom 802.11\\Driver;C:\\Program Files\\QuickTime\\QTSystem\\;C:\\Program Files\\Zend\\ZendServer\\bin\n        [PATHEXT] => .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC\n        [PCBRAND] => s\n        [PHPRC] => C:\\Program Files\\Zend\\ZendServer\\etc\n        [PHP_FCGI_MAX_REQUESTS] => 10000\n        [Platform] => BNB\n        [PROCESSOR_ARCHITECTURE] => x86\n        [PROCESSOR_IDENTIFIER] => x86 Family 6 Model 37 Stepping 5, GenuineIntel\n        [PROCESSOR_LEVEL] => 6\n        [PROCESSOR_REVISION] => 2505\n        [ProgramData] => C:\\ProgramData\n        [ProgramFiles] => C:\\Program Files\n        [PSModulePath] => C:\\windows\\system32\\WindowsPowerShell\\v1.0\\Modules\\\n        [PTSM_install_path] => c:\\Program Files\\Hewlett-Packard\\HP ProtectTools Security Manager\\Bin\n        [PUBLIC] => C:\\Users\\Public\n        [QTJAVA] => C:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip\n        [SystemDrive] => C:\n        [SystemRoot] => C:\\windows\n        [TEMP] => C:\\Users\\User\\AppData\\Local\\Temp\n        [TMP] => C:\\windows\\TEMP\n        [USERDOMAIN] => WORKGROUP\n        [USERNAME] => HP$\n        [USERPROFILE] => C:\\windows\\system32\\config\\systemprofile\n        [windir] => C:\\windows\n        [AP_PARENT_PID] => 688\n        [_FCGI_CLIENT_PID_] => 2244\n        [_FCGI_MUTEX_] => 776\n        [_FCGI_NTAUTH_IMPERSONATE_] => 1\n        [_FCGI_SHUTDOWN_EVENT_] => 772\n        [FCGI_ROLE] => RESPONDER\n        [HTTP_HOST] => localhost\n        [HTTP_USER_AGENT] => Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0\n        [HTTP_ACCEPT] => text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\n        [HTTP_ACCEPT_LANGUAGE] => en-us,en;q=0.5\n        [HTTP_ACCEPT_ENCODING] => gzip, deflate\n        [HTTP_ACCEPT_CHARSET] => ISO-8859-1,utf-8;q=0.7,*;q=0.7\n        [HTTP_CONNECTION] => keep-alive\n        [HTTP_COOKIE] => __utma=1.441182227.1321189418.1322498628.1323267653.4; __utmz=1.1321189418.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); ZDEDebuggerPresent=php,phtml,php3; PHPSESSID=nqtap9dur6uja1rjjumcttmc25\n        [HTTP_CACHE_CONTROL] => max-age=0\n        [PATH] => C:\\windows\\system32;C:\\windows;C:\\windows\\System32\\Wbem;C:\\windows\\System32\\WindowsPowerShell\\v1.0\\;c:\\Program Files\\Hewlett-Packard\\Drive Encryption\\;C:\\Program Files\\WIDCOMM\\Bluetooth Software\\;C:\\Program Files\\Broadcom\\Broadcom 802.11\\Driver;C:\\Program Files\\Zend\\ZendServer\\bin;C:\\Program Files\\Zend\\ZendServer\\share\\ZendFramework\\bin;C:\\Program Files\\Zend\\MySQL51\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;C:\\Program Files\\TortoiseSVN\\bin;C:\\Program Files\\Common Files\\HP\\Digital Imaging\\bin;C:\\Program Files\\HP\\Digital Imaging\\bin\\;C:\\Program Files\\HP\\Digital Imaging\\bin\\Qt\\Qt 4.3.3;C:\\Program Files\\QuickTime\\QTSystem\\;\n        [COMSPEC] => C:\\windows\\system32\\cmd.exe\n        [WINDIR] => C:\\windows\n        [SERVER_SIGNATURE] => \n        [SERVER_SOFTWARE] => Apache/2.2.16 (Win32) mod_ssl/2.2.16 OpenSSL/0.9.8o\n        [SERVER_NAME] => localhost\n        [SERVER_ADDR] => 127.0.0.1\n        [SERVER_PORT] => 80\n        [REMOTE_ADDR] => 127.0.0.1\n        [DOCUMENT_ROOT] => C:/Program Files/Zend/Apache2/htdocs\n        [SERVER_ADMIN] => admin@example.com\n        [SCRIPT_FILENAME] => C:/Program Files/Zend/Apache2/htdocs/MySite/web/app_dev.php\n        [REMOTE_PORT] => 1740\n        [GATEWAY_INTERFACE] => CGI/1.1\n        [SERVER_PROTOCOL] => HTTP/1.1\n        [REQUEST_METHOD] => GET\n        [QUERY_STRING] => \n        [REQUEST_URI] => /MySite/web/app_dev.php/\n        [SCRIPT_NAME] => /MySite/web/app_dev.php\n        [PATH_INFO] => /\n        [PATH_TRANSLATED] => C:\\Program Files\\Zend\\Apache2\\htdocs\\index.html\n        [PHP_SELF] => /MySite/web/app_dev.php/\n        [REQUEST_TIME] => 1324019271\n        [argv] => Array\n            (\n            )\n\n        [argc] => 0\n    )\n\n```\n",
+      "Finally I've made a working patch for that, I'll submit it as soon as I figure out how to submit a patch... ;)\n",
+      "http://help.github.com/send-pull-requests/\n",
+      "Task for the BHD: update the associated PR #3551 (there are some comments there)\n",
+      "working on this issue today...\n",
+      "has a working PR, just needs review: #3551\n",
+      "private $username = 'test';\n    private $password = 'test';\npublic function test_auth() {\n       if($this->authenticate_user()){\n           echo 'login';exit;\n       }else{\n           echo 'failed';exit;\n       }\n    }\n\n```\npublic function authenticate_user(){\n    if( !isset($_SERVER['PHP_AUTH_USER']) )\n    {\n        header('HTTP/1.0 401 Unauthorized');\n        header('HTTP/1.1 401 Unauthorized');\n        header('WWW-Authenticate: Basic realm=Realm');\n        echo You must login to use this service; // User sees this if hit cancel\n        die();            \n    }else{\n        if($this->username != $_SERVER['PHP_AUTH_USER'] || $this->password != $_SERVER['PHP_AUTH_PW']){\n            header('HTTP/1.0 401 Unauthorized');\n            header('HTTP/1.1 401 Unauthorized');\n            header('WWW-Authenticate: Basic realm=Realm');\n            echo You must login to use this service; // User sees this if hit cancel\n            die();\n        }else{\n            return true;\n        }\n    }\n}\n```\n",
+      "    # make HTTP Basic Authentication work on php5-fcgi installs\r\n    <IfModule mod_fcgid.c>\r\n        RewriteCond %{HTTP:Authorization} .\r\n        RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]\r\n    </IfModule>",
+      "thanks for this post, bug fixes and comments - I got this workaround to work on non symfony, managed to patched thttpd web server and PHP Navigator file manager with your workarounds."
+    ]
+  },
+  "1288124": {
+    "comments": [
+      "@benjamindulau can you check with the master branch ?\n",
+      "Could you please correct your Gist? There's stuff missing (how does SpecElementType look like?) and I can't reconstruct your problem.\n",
+      "@bschussek i've updated the gist. I just tried with Symfony 2.0.12 and the issue is still present.\n\nI'm trying with master branch right now.\n\nedit: added the form template to the gist\n",
+      "Task for the BHD: Create a failing test case\n",
+      "Working on this one\n",
+      "Checked against the master branch with the code in the gist, looks fine to me. I cannot be 100% sure that I reproduced exactly what @benjamindulau as I don't have the controller or the entity code, but I'm positive that the error is associated (and displayed next) to the parent form (Entry) and not in one of the embedded form.\n\nI can provide a test in AbstractLayout, but I am not sure it is necessary.\n",
+      "Ok. I will close this issue then. Please reopen it if necessary.\n"
+    ]
+  },
+  "1219548": {
+    "comments": [
+      "Symfony don't use Doctrine mapping to do the field guessing but validation constraints.\n\nMaybe `@Assert\\Type(type=array)` should be guessed as a collection type...\n",
+      "Symfony uses both for the guessing\n",
+      "@stof, right, sorry. guessing for collection with doctrine `array` are even here, but commented\n\n``` php\n<?php\n//... \n 53             //case 'array':\n 54             //  return new TypeGuess('Collection', array(), Guess::HIGH_CONFIDENCE);\n//...\n```\n",
+      "Can't get far enough in the history of the guesser to understand why it's commented, any information ? Moreover, why there is an uppercase C on Collection ? Is is because a long time ago types began with upercases ?\n",
+      "Reading the history, this is commented since the first implementation of the guesser: https://github.com/symfony/symfony/commit/3bf9f7782debd42bc1cd050ea0b51ef14fbf8e17\n",
+      "@bschussek what was the reason to comment the guessing for the array fields ?\n",
+      "@stof Simply that I didn't know what to do back then. What should we guess? collection?\n",
+      "Task for the BHD: guess collection for both Doctrine arrays & `@Assert\\Type(type=array)`\n",
+      "Working on it right now\n"
+    ]
+  },
+  "19628175": {
+    "comments": [
+      "for reference, here is how Behat MinkGoutteDriver is extending Goutte to guess the charset from the content when there is no content type header: https://github.com/Behat/MinkGoutteDriver/blob/master/src/Behat/Mink/Driver/Goutte/Client.php#L32\n\nThis could be reused to implement it directly in DomCrawler (the Mink code is under MIT)\n"
+    ]
+  }
+}
