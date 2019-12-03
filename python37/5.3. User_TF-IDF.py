@@ -156,7 +156,7 @@ for userID, items in users:
         "commits_processed": commits_processed,
         "issue_comments": ics,
         "issue_comments_processed": ics_processed,
-        "pr_comments": prcs_processed,
+        "pr_comments": prcs,
         "pr_comments_processed": prcs_processed,
         "prs": prs,
         "prs_processed": prs_processed,

@@ -5,6 +5,10 @@ The project is a content-based filtering approach for suggesting tasks and proje
 See the project proposal [here](PROPOSAL.md)
 
 ***
+## 2019.12.02 Update
+>* Add 6.1. Cosine Similarity (including VSM) to recommend issues for users.
+
+
 ## 2019.11.26 Update
 >* Add 1.4. User_Textual_Data_Extraction.py to extract users' textual history records.
 >* Add 5.3. User_TF-IDF.py to apply TF-IDF for users. See [results](https://github.com/jonlamca/comp5117-lam-wang/tree/master/python37/data/user_text)
