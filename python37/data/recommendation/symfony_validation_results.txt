@@ -1,0 +1,52 @@
+Results for user 408368: 
+Overall correct: 1 / 1
+Results for user 47313: 
+Overall correct: 66 / 3
+Results for user 2867228: 
+Overall correct: 0 / 1
+Results for user 351471: 
+Overall correct: 1 / 1
+Results for user 328359: 
+Overall correct: 1 / 1
+Results for user 1206230: 
+Overall correct: 1 / 1
+Results for user 538415: 
+Overall correct: 0 / 1
+Results for user 546682: 
+Overall correct: 0 / 1
+Results for user 88061: 
+Overall correct: 1 / 1
+Results for user 183678: 
+Overall correct: 3 / 3
+Results for user 315266: 
+Overall correct: 0 / 1
+Results for user 564529: 
+Overall correct: 1 / 1
+Results for user 4438652: 
+Overall correct: 0 / 3
+Results for user 121793: 
+Overall correct: 1 / 1
+Results for user 657357: 
+Overall correct: 1 / 1
+Results for user 753327: 
+Overall correct: 0 / 1
+Results for user 208304: 
+Overall correct: 1 / 2
+Results for user 24047: 
+Overall correct: 1 / 1
+Results for user 475833: 
+Overall correct: 0 / 1
+Results for user 179912: 
+Overall correct: 0 / 1
+Results for user 244663: 
+Overall correct: 1 / 1
+Results for user 248818: 
+Overall correct: 0 / 1
+Results for user 439196: 
+Overall correct: 0 / 1
+Results for user 502646: 
+Overall correct: 1 / 1
+Results for user 106845: 
+Overall correct: 1 / 1
+
+Average accuracy: ~70%

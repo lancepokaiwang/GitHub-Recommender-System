@@ -1,5 +1,10 @@
 # Experiments
 
+## Dec 4 - Preliminary Results
+* using commit log of existing issues we calculate the correct author
+* using symfony actvity: matched at 70%
+* without symfony actvity: matched at 32%
+
 ## Nov 4
 
 ### Features:

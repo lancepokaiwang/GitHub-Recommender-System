@@ -1,0 +1,103 @@
+Results for user 408368: 
+{'18230678': 0.7798306288442365}
+Overall correct: 0 / 1
+
+Results for user 47313: 
+{'1184805': 0.8442699270665294, '18230678': 0.825848417345808, '2170024': 0.8235888812290623}
+Overall correct: 1 / 3
+
+Results for user 2867228: 
+{'13800942': 0.6115450726247599}
+Overall correct: 1 / 1
+
+Results for user 351471: 
+{'1184805': 0.6574771675571274}
+Overall correct: 0 / 1
+
+Results for user 328359: 
+{'1184805': 0.796087181473688}
+
+Overall correct: 0 / 1
+Results for user 1206230: 
+{'18230678': 0.6058681515028239}
+
+Overall correct: 0 / 1
+Results for user 538415: 
+{'14401746': 0.45194771401264433}
+
+Overall correct: 1 / 1
+Results for user 546682: 
+{'13111578': 0.5287252344069024}
+
+Overall correct: 1 / 1
+Results for user 88061: 
+{'1184805': 0.8356513185784318}
+
+Overall correct: 0 / 1
+Results for user 183678: 
+{'1184805': 0.8622344439497012, '18230678': 0.8333933519895221, '12900121': 0.7957196765208603}
+
+Overall correct: 0 / 3
+Results for user 315266: 
+{'11110070': 0.49015166972628577}
+
+Overall correct: 1 / 1
+Results for user 564529: 
+{'4104878': 0.7053682795664904}
+
+Overall correct: 0 / 1
+Results for user 4438652: 
+{'8419747': 0.5618234511959085, '1288124': 0.3319322546143112, '2170024': 0.32964809812208096}
+
+Overall correct: 1 / 3
+Results for user 121793: 
+{'1184805': 0.47609802674856216}
+
+Overall correct: 0 / 1
+Results for user 657357: 
+{'1184805': 0.8030202424025077}
+
+Overall correct: 0 / 1
+Results for user 753327: 
+{'4546032': 0.5419000395006118}
+
+Overall correct: 1 / 1
+Results for user 208304: 
+{'1184805': 0.44251370899081455, '12900121': 0.4069019232113341}
+
+Overall correct: 0 / 2
+Results for user 24047: 
+{'15752417': 0.2306251794307702}
+
+Overall correct: 0 / 1
+Results for user 475833: 
+{'3065657': 0.6693886562166104}
+
+Overall correct: 1 / 1
+Results for user 179912: 
+{'11110070': 0.3045961281946465}
+
+Overall correct: 0 / 1
+Results for user 244663: 
+{'1184805': 0.838093595656317}
+
+Overall correct: 0 / 1
+Results for user 248818: 
+{'1184805': 0.8535483997889928}
+
+Overall correct: 0 / 1
+Results for user 439196: 
+{'1184805': 0.6007107494569294}
+
+Overall correct: 0 / 1
+Results for user 502646: 
+{'1184805': 0.6659137018377178}
+
+Overall correct: 0 / 1
+Results for user 106845: 
+{'2170024': 0.15133265842252086}
+
+Average accuracy: 32%
+
+Issues_Correct:
+{'2170024': 1, '13800942': 1, '14401746': 1, '13111578': 1, '11110070': 1, '8419747': 1, '4546032': 1, '3065657': 1}
