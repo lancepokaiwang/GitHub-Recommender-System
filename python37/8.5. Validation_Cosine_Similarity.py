@@ -72,11 +72,33 @@ def recommendation(user="248818"):
     return scores
 
 
-# Main
+# Mainor userid, user in users.items():
+    if userid in user_numbers:
+        result = recommendation(userid)
 
+        print("Results for user {}: ".format(userid))
+        print(result)
+
+        correct = 0
+        for item, score in result.items():
+            TOTAL_RESULTS += 1
+            if (userid in commits[item]):
+                ISSUES_EXPECTED[item] = 1
+                correct += 1
+                TOTAL_CORRECT += 1
+        if user_numbers[userid] < NUM_OF_SELECTION:
+            print("Overall correct: {} / {}".format(correct, user_numbers[userid]))
+        else:
+            print("Overall correct: {} / {}".format(correct, NUM_OF_SELECTION))
+        #print("\n\n\n")
+
+#print("\n\n\n")
+print("Average accuracy: {}%".format(round((TOTAL_CORRECT / TOTAL_RESULTS) * 100), 2))
+print(ISSUES_EXPECTED)
 
 TOTAL_CORRECT = 0
 TOTAL_RESULTS = 0
+
 for userid, user in users.items():
     if userid in user_numbers:
         result = recommendation(userid)
@@ -87,15 +109,17 @@ for userid, user in users.items():
         correct = 0
         for item, score in result.items():
             TOTAL_RESULTS += 1
-            for commit_user in commits[item]:
-                if commit_user == userid:
-                    correct += 1
-                    TOTAL_CORRECT += 1
+            if (userid in commits[item]):
+                ISSUES_EXPECTED[item] = 1
+                correct += 1
+                TOTAL_CORRECT += 1
         if user_numbers[userid] < NUM_OF_SELECTION:
             print("Overall correct: {} / {}".format(correct, user_numbers[userid]))
         else:
             print("Overall correct: {} / {}".format(correct, NUM_OF_SELECTION))
-        print("\n\n\n")
+        #print("\n\n\n")
 
-print("\n\n\n")
+#print("\n\n\n")
 print("Average accuracy: {}%".format(round((TOTAL_CORRECT / TOTAL_RESULTS) * 100), 2))
+print(ISSUES_EXPECTED)
+print(ISSUES)

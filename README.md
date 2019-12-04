@@ -5,6 +5,10 @@ The project is a content-based filtering approach for suggesting tasks and proje
 See the project proposal [here](PROPOSAL.md)
 
 ***
+## 2019.12.03 Update - Preliminary Results
+>* Update cosine similarity 6.1 and 8.5 to calculate recommendation scores using known commity authors to validate
+>* Commits used for validation seems off, TODO: recalculate
+
 ## 2019.12.02 Update
 >* Add 6.1. Cosine Similarity (including VSM) to recommend issues for users.
 
