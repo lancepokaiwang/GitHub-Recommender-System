@@ -2,8 +2,6 @@
 
 The project is a content-based filtering approach for suggesting tasks and projects to GitHub newcomers.
 
-See the project proposal [here](PROPOSAL.md)
-
 ***
 ## 2019.12.03 Update - Preliminary Results
 >* Update cosine similarity 6.1 and 8.5 to calculate recommendation scores using known commit authors to validate
